@@ -1,0 +1,20 @@
+{
+  "name": "webshop-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type":"module",
+  "scripts": {
+    "start:mysql": "node --watch servers/server-sql.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "M4Uu",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.19.2",
+    "mysql2": "3.10.2",
+    "zod": "3.23.8"
+  }
+}
