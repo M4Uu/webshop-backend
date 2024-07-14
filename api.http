@@ -1,3 +1,29 @@
-### Obtiene todos los usuarios
+### test de datos por query
+GET http://localhost:1234/users/login?email=cruzmlathulerie@gmail.com&password=1234
 
-GET http://localhost:1234
+### test de registro de usuario
+
+POST http://localhost:1234/users/register
+Content-Type: application/json
+
+{
+  "user_name" : "M4Uu",
+  "email_address" : "cruzmlathulerie@gmail.com",
+  "first_name" : "Cruz",
+  "last_name" : "Lathulerie",
+  "pswd": "1234"
+}
+
+### Test de cambio de datos de usuario
+
+PATCH http://localhost:1234/users/upload
+Content-Type: application/json
+
+{
+  "user_id" : "c997742a-4190-11ef-9f45-7440bb5683fe",
+  "user_name" : "M4Uu",
+  "email_address" : "cruzmlathulerie@gmail.com",
+  "first_name" : "Cruz",
+  "last_name" : "Lathulerie",
+  "pswd": "1234"
+}
