@@ -27,8 +27,9 @@ export class UserController {
     const newUser = await this.userModel.register({ input: result.data })
 
     res.status(201).json(newUser)
-
   }
+
+
   delete = async(req, res) => {}
   upload = async(req, res) => {
     const result = validateUser(req.body)

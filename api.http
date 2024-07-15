@@ -1,5 +1,5 @@
 ### test de datos por query
-GET http://localhost:1234/users/login?email=cruzmlathulerie@gmail.com&password=1234
+GET http://localhost:1234/users/login?email=maria_antonia@gmail.com&password=2233L
 
 ### test de registro de usuario
 
