@@ -1,4 +1,4 @@
-import z from 'zod'
+import z, { object } from 'zod'
 
 const userSchema = z.object({
   user_id: z.string().optional(),
@@ -9,10 +9,11 @@ const userSchema = z.object({
   pswd: z.string()
 })
 
-export function validateUser(input) {
+
+export function validateUser(input : typeof object) {
   return userSchema.safeParse(input)
 }
 
-export function validatePartialUser(input) {
+export function validatePartialUser(input : typeof object) {
   return userSchema.partial().safeParse(input)
 }

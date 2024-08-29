@@ -1,8 +1,16 @@
 ### test de datos por query
-GET http://localhost:1234/users/login?email=maria_antonia@gmail.com&password=2233L
+POST http://localhost:1234/users/login
+Content-Type: application/json
+
+{
+  "email": "cruzmlathulerie@gmail.com",
+  "password": "1234"
+}
+
+### test de autenticación de datos
+GET http://localhost:1234/users/protected
 
 ### test de registro de usuario
-
 POST http://localhost:1234/users/register
 Content-Type: application/json
 
@@ -15,12 +23,11 @@ Content-Type: application/json
 }
 
 ### Test de cambio de datos de usuario
-
 PATCH http://localhost:1234/users/upload
 Content-Type: application/json
 
 {
-  "user_id" : "c997742a-4190-11ef-9f45-7440bb5683fe",
+  "user_id" : "7d577e95-5437-11ef-8b6f-7440bb5683fe",
   "user_name" : "M4Uu",
   "email_address" : "cruzmlathulerie@gmail.com",
   "first_name" : "Cruz",

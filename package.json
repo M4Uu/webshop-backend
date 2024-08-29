@@ -2,9 +2,11 @@
   "name": "webshop-backend",
   "version": "1.0.0",
   "main": "index.js",
-  "type":"module",
+  "type": "commonjs",
   "scripts": {
-    "start:mysql": "node --watch servers/server-sql.js",
+    "tsc": "tsc",
+    "dev:mysql": "ts-node-dev src/servers/server-sql.ts",
+    "start:mysql": "node build/servers/server-sql.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,12 +14,26 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cookie-parser": "^1.4.6",
     "cors": "2.8.5",
+    "dotenv": "^16.4.5",
     "express": "4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "3.10.2",
     "zod": "3.23.8"
   },
   "rules": {
-    "strict": ["error", "global"]
+    "strict": [
+      "error",
+      "global"
+    ]
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.4"
   }
 }

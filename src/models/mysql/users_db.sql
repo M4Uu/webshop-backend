@@ -21,4 +21,4 @@ INSERT INTO users(user_id ,user_name, email_address, first_name, last_name, pswd
 SELECT BIN_TO_UUID(user_id), user_name, email_address, first_name, last_name, pswd, created_ad FROM users;
 
 delete from users
- where users.user_name = "text-test"
+ where users.user_name = "test"
