@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
-const jws_js_1 = require("../middleware/jws.js");
+const jws_1 = require("../middleware/jws");
 const schema = __importStar(require("../schema/user"));
 class UserController {
     userModel;
@@ -35,21 +35,41 @@ class UserController {
     //   const users = await this.userModel.getAll()
     //   res.status(200).json(users)
     // }
-    getUser = async (req, res) => {
-        const result = schema.validateUser(req.body);
-        if (req.query["error"]) {
-            res.status(400).json({ error: JSON.parse(result.error?.message) });
+    protected = async (req, res) => {
+        const token = req.cookies['access_token'];
+        if (!token) {
+            res.status(403).send('Access not authorized');
             return;
         }
-        const users = await this.userModel.getUser({ input: req.query });
-        res.status(200)
-            .json(users)
-            .cookie('access_token', () => users && (0, jws_js_1.JWTMiddlewareInitial)(users), {
-            httpOnly: true, // ;a coockie solo se puede acceder en el servidor
-            secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
-            sameSite: 'strict', // la coockie solo sse puede acceder en el mismo dominio
-            maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
-        });
+        try {
+            res.status(200).json((0, jws_1.JWTParse)(token));
+        }
+        catch (error) {
+            res.status(401).send('Access not authorized');
+            return;
+        }
+    };
+    getUser = async (req, res) => {
+        const user = (0, jws_1.JWTMiddlewareInitial)(await this.userModel.getUser({ input: req.body }));
+        try {
+            if (!user) {
+                res.status(404).json({ message: 'User not found' });
+                return;
+            }
+            res.cookie('access_token', user, {
+                httpOnly: true, // ;a coockie solo se puede acceder en el servidor
+                // secure: true, //la coockie solo se puede acceder en https
+                secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
+                sameSite: 'strict', // la coockie entre múltiples dominios (con 'strict' solo se puede acceder desde el mismo dominio)
+                maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
+            });
+            res.status(200).send();
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).json({ message: 'Server error' });
+            return;
+        }
     };
     register = async (req, res) => {
         const result = schema.validateUser(req.body);

@@ -8,7 +8,8 @@ const createUserRouter = (userModel) => {
     const userController = new user_1.UserController(userModel);
     // ENDPOINTS
     // userRouter.get('/', userController.getAll)
-    userRouter.get('/login', userController.getUser);
+    userRouter.get('/protected', userController.protected);
+    userRouter.post('/login', userController.getUser);
     userRouter.post('/register', userController.register);
     userRouter.patch('/upload', userController.upload);
     return userRouter;
