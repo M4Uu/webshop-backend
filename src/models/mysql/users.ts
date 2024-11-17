@@ -32,7 +32,20 @@ export class UserModel {
     const connection = await connect()
     const { email, password } = input
     
-    const [user, _tableInfo]: [UserData[], mysql.FieldPacket[]] = await connection.query('SELECT BIN_TO_UUID(user_id), user_name, email_address, first_name, last_name, pswd, created_ad FROM users WHERE ? = pswd AND ? = email_address;',[password, email])
+    const [user, _tableInfo]: [UserData[], mysql.FieldPacket[]] = await connection.query(
+      'SELECT BIN_TO_UUID(id) As id, user_name, email_address, first_name, last_name, pswd, created_ad FROM users WHERE ? = pswd AND ? = email_address;',
+      [password, email]
+    )
+    disconnect(connection)
+    if (user[0] === undefined) return null
+    return user[0];
+  }
+
+  static async refreshUser({ input } : any){
+    const connection = await connect()
+    const { id } = input
+    
+    const [user, _tableInfo]: [UserData[], mysql.FieldPacket[]] = await connection.query('SELECT BIN_TO_UUID(user_id) As user_id, user_name, email_address, first_name, last_name, pswd, created_ad FROM users WHERE ? = BIN_TO_UUID(user_id) ;',[id])
     disconnect(connection)
     if (user[0] === undefined) return null
     return user[0];
@@ -54,18 +67,33 @@ export class UserModel {
     const [timeResult] : [Time[], mysql.FieldPacket[]] = await connection.query('SELECT NOW() time;')
     const time = timeResult[0].time
 
-    try{
-      await connection.query(
-        'INSERT INTO users (user_id ,user_name, email_address, first_name, last_name, pswd, created_ad ) VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?);',
-        [uuid, user_name, email_address, first_name, last_name, pswd, time])
-    }
-    catch (err) {
-      throw new Error('Error creating user')
+    const [VerifyUser]: [UserData[], mysql.FieldPacket[]] = await connection.query(
+      'SELECT * FROM users WHERE user_name = ?',
+      [user_name]
+    )
+
+    if(VerifyUser[0]){
+      disconnect(connection)
+      return null
+    }else{
+      try{
+        await connection.query(
+          'INSERT INTO users (id ,user_name, email_address, first_name, last_name, pswd, created_ad ) VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?);',
+          [uuid, user_name, email_address, first_name, last_name, pswd, time]
+        )
+      }
+      catch (err) {
+        throw new Error('Error creating user')
+      }
+  
+      const [newUser]: [UserData[], mysql.FieldPacket[]] = await connection.query(
+        'SELECT BIN_TO_UUID(id) id, user_name, email_address, first_name, last_name, pswd, created_ad FROM users WHERE id = UUID_TO_BIN(?)',
+        [uuid]
+      )
+      disconnect(connection)
+      return newUser[0]
     }
 
-    const [newUser]: [UserData[], mysql.FieldPacket[]] = await connection.query('SELECT BIN_TO_UUID(user_id) user_id, user_name, email_address, first_name, last_name, pswd, created_ad FROM users WHERE user_id = UUID_TO_BIN(?)',[uuid])
-    disconnect(connection)
-    return newUser[0]
   }
 
   // static async delete({ id } : any) {}
@@ -88,12 +116,15 @@ export class UserModel {
               first_name = ?,
               last_name = ?,
               pswd = ?
-          WHERE user_id = UUID_TO_BIN(?);`,
+          WHERE id = UUID_TO_BIN(?);`,
         [user_name, email_address, first_name, last_name, pswd, user_id])
     } catch (err) {
       throw new Error('Error change user')
     }
-    const [changedUser] = await connection.query('SELECT BIN_TO_UUID(user_id) user_id, user_name, email_address, first_name, last_name, pswd, created_ad FROM users WHERE user_id = UUID_TO_BIN(?)',[user_id])
+    const [changedUser] = await connection.query(
+      'SELECT BIN_TO_UUID(id) id, user_name, email_address, first_name, last_name, pswd, created_ad FROM users WHERE id = UUID_TO_BIN(?)',
+      [user_id]
+    )
     disconnect(connection)
     if(changedUser === undefined) return null
     return changedUser

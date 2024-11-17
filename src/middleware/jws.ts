@@ -5,7 +5,7 @@ import { UserData } from '../interface/users'
 export function JWTMiddlewareInitial(input: UserData | null) {
   if(!input) return null;
   return sign({
-    user_id: input.user_id,
+    user_id: input.id,
     user_name: input. user_name,
     email_address: input.email_address,
     first_name: input.first_name,
@@ -17,7 +17,15 @@ export function JWTMiddlewareInitial(input: UserData | null) {
   )
 }
 
-export function JWTMiddlewareRefresh(){}
+export function JWTMiddlewareRefresh(input?: string){
+  if(!input) return null;
+  return sign({
+    id: input
+  },
+    SECRET_JWT_KEY,
+    {expiresIn: '30d'}
+  )
+}
 
 export function JWTParse (input: any){
   return verify(input,SECRET_JWT_KEY) as object

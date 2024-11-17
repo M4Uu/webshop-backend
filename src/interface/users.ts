@@ -7,7 +7,7 @@ export interface Time extends RowDataPacket {
   time: string
 }
 export interface UserData extends RowDataPacket {
-  user_id: string,
+  id: string,
   user_name: string,
   email_address: string,
   first_name: string,

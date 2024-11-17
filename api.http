@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### test de autenticación de datos
-GET http://localhost:1234/users/protected
+GET http://localhost:1234/users/protected?type=a
 
 ### test de registro de usuario
 POST http://localhost:1234/users/register

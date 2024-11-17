@@ -5,8 +5,8 @@
   "type": "commonjs",
   "scripts": {
     "tsc": "tsc",
-    "dev:mysql": "ts-node-dev src/servers/server-sql.ts",
-    "start:mysql": "node build/servers/server-sql.js",
+    "start:mysql": "node build/src/servers/serversql.js",
+    "dev:mysql": "tsc && node build/src/servers/serversql.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,6 +20,7 @@
     "express": "4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "3.10.2",
+    "webshop-backend": "file:",
     "zod": "3.23.8"
   },
   "rules": {

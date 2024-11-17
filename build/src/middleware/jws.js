@@ -9,7 +9,7 @@ function JWTMiddlewareInitial(input) {
     if (!input)
         return null;
     return (0, jsonwebtoken_1.sign)({
-        user_id: input.user_id,
+        user_id: input.id,
         user_name: input.user_name,
         email_address: input.email_address,
         first_name: input.first_name,
@@ -17,7 +17,13 @@ function JWTMiddlewareInitial(input) {
         pswd: input.pswd
     }, config_1.SECRET_JWT_KEY, { expiresIn: '1h' });
 }
-function JWTMiddlewareRefresh() { }
+function JWTMiddlewareRefresh(input) {
+    if (!input)
+        return null;
+    return (0, jsonwebtoken_1.sign)({
+        id: input
+    }, config_1.SECRET_JWT_KEY, { expiresIn: '30d' });
+}
 function JWTParse(input) {
     return (0, jsonwebtoken_1.verify)(input, config_1.SECRET_JWT_KEY);
 }
