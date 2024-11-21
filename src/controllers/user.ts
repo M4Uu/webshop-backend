@@ -14,6 +14,12 @@ export class UserController {
   //   res.status(200).json(users)
   // }
 
+  logOut = async(_req: Request, res: Response) => {
+    res.clearCookie('access_token')
+    res.clearCookie('refresh_token')
+    res.send('Log out.')
+  }
+
   protected = async(req: Request, res: Response) => {
     const token = req.cookies['access_token']
 
@@ -105,6 +111,7 @@ export class UserController {
     }catch(err){
       console.log(err);
       res.status(500).json({ message: 'Server error' })
+      return ;
     }
   }
 

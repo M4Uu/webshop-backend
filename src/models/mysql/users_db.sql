@@ -5,7 +5,7 @@ CREATE DATABASE users_db;
 USE users_db;
 
 CREATE TABLE users(
-	id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+	id BINARY(16) PRIMARY KEY UNIQUE DEFAULT (UUID_TO_BIN(UUID())),
 	user_name VARCHAR(50) NOT NULL UNIQUE,
 	email_address VARCHAR(50) NOT NULL UNIQUE,
 	first_name VARCHAR(50) NOT NULL,
@@ -14,17 +14,25 @@ CREATE TABLE users(
 	created_ad TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE direction(
+	id BINARY(16) PRIMARY KEY UNIQUE DEFAULT (UUID_TO_BIN(UUID())),
+	country VARCHAR(50),
+	state VARCHAR(50),
+	city VARCHAR(50)
+);
+
 CREATE TABLE providers(
-	id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+	id BINARY(16) PRIMARY KEY UNIQUE DEFAULT (UUID_TO_BIN(UUID())),
 	name VARCHAR(50) NOT NULL,
 	description VARCHAR(255),
 	phone VARCHAR(17) NOT NULL,
 	email VARCHAR(50) NOT NULL,
-	direction JSON -- '{"country": "", "state": "", "city": ""}'
+	direction BINARY(16),
+	FOREIGN KEY (direction) REFERENCES direction(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE articles(
-	id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+	id BINARY(16) PRIMARY KEY UNIQUE DEFAULT (UUID_TO_BIN(UUID())),
 	name VARCHAR(50) NOT NULL,
 	description VARCHAR(50) NOT NULL,
 	price DECIMAL(10, 2) NOT NULL,
@@ -34,7 +42,7 @@ CREATE TABLE articles(
 
 -- Esta tabla de unión identifica de cual proveedor es cada artículo.
 CREATE TABLE articles_has_providers(
-	id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+	id BINARY(16) PRIMARY KEY UNIQUE DEFAULT (UUID_TO_BIN(UUID())),
 	provider_id BINARY(16),
 	article_id BINARY(16),
 	price DECIMAL(10, 2) NOT NULL,
@@ -48,7 +56,7 @@ CREATE TABLE articles_has_providers(
 );
 
 CREATE TABLE invoice(
-	id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+	id BINARY(16) PRIMARY KEY UNIQUE DEFAULT (UUID_TO_BIN(UUID())),
 	user_name VARCHAR(50),
 	user_id BINARY(16),
 	quantity INT NOT NULL DEFAULT 1,
@@ -58,7 +66,7 @@ CREATE TABLE invoice(
 
 -- Factura artículo UUID, corresponde a la factura 1, del artículo A, comprados X.
 CREATE TABLE article_has_invoice(
-	id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+	id BINARY(16) PRIMARY KEY UNIQUE DEFAULT (UUID_TO_BIN(UUID())),
 	invoice_id BINARY(16),
 	article_id BINARY(16),
 	quantity INT NOT NULL,
@@ -69,6 +77,7 @@ CREATE TABLE article_has_invoice(
 
 -- Insersión de elementos en las tablas
 
+
 INSERT INTO users(user_name, email_address, first_name, last_name, pswd) VALUES
 	("mariaDB", "maria_antonia@gmail.com", "María", "Antonia", "2233L"),
 	("Teresa", "t_mora@gmail.com", "Teresa", "Mora", "11111");
@@ -77,9 +86,27 @@ INSERT INTO articles(name, description, price, stock) VALUES
 	("zapatos deportivos", "Calzado para hacer deporte",50.23 , 200),
 	("Tacos para football", "Para profesionales", 70.48, 130);
 
-INSERT INTO providers (name, description, phone, email, direction) VALUES
-	("Adidas", "Marca deportiva", "9999-999-999-999", "adidas@gmail.com",'{"country": "Alemania","state": "Erlangen-Höchstadt","city": "Herzogenaurach"}'),
-	("Puma", "Marca deportiva", "9999-999-999-999", "puma@gmail.com",'{"country": "Alemania","state": "Erlangen-Höchstadt","city": "Herzogenaurach"}');
+INSERT INTO direction(country, state, city) VALUES
+	("Alemania","Erlangen-Höchstadt","Herzogenaurach");
+
+INSERT INTO providers (name, description, phone, email, direction)
+SELECT
+	'Adidas' AS name,
+	'Marca deportiva' AS description,
+	'9999-999-999' AS phone,
+	'adidas@gmail.com' AS email,
+	d.id AS direction
+FROM direction d
+WHERE d.country = 'Alemania'
+UNION ALL
+SELECT
+	'Puma',
+	'Marca deportiva',
+	'8888-888-8888',
+	'puma@gmail.com',
+	d.id
+FROM direction d
+WHERE d.country = 'Alemania';
 
 INSERT INTO invoice (user_name, user_id)
 SELECT user_name, id
@@ -115,6 +142,7 @@ SELECT * FROM providers;
 SELECT * FROM invoice;
 SELECT * FROM articles_has_providers;
 SELECT * FROM article_has_invoice;
+SELECT * FROM direction
 
-delete from users
+-- delete from users
 --  where users.user_name = "test"

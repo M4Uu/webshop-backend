@@ -35,6 +35,11 @@ class UserController {
     //   const users = await this.userModel.getAll()
     //   res.status(200).json(users)
     // }
+    logOut = async (_req, res) => {
+        res.clearCookie('access_token');
+        res.clearCookie('refresh_token');
+        res.send('Log out.');
+    };
     protected = async (req, res) => {
         const token = req.cookies['access_token'];
         if (!token) {
@@ -113,6 +118,7 @@ class UserController {
         catch (err) {
             console.log(err);
             res.status(500).json({ message: 'Server error' });
+            return;
         }
     };
     delete = async (_req, _res) => { };

@@ -7,8 +7,8 @@ export const createUserRouter = ( userModel : typeof UserModel) => {
   const userController = new UserController(userModel)
 
   // ENDPOINTS
-  // userRouter.get('/', userController.getAll)
   userRouter.get('/protected', userController.protected)
+  userRouter.get('/logout', userController.logOut)
   userRouter.post('/login', userController.getUser)
   userRouter.post('/register', userController.register)
   userRouter.patch('/upload', userController.upload)
