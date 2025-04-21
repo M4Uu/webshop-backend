@@ -9,15 +9,10 @@ export class UserController {
     this.userModel = userModel
   }
 
-  // getAll = async(req, res) => {
-  //   const users = await this.userModel.getAll()
-  //   res.status(200).json(users)
-  // }
-
   logOut = async(_req: Request, res: Response) => {
-    res.clearCookie('access_token')
-    res.clearCookie('refresh_token')
-    res.send('Log out.')
+    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
+    res.status(200).json({ message: 'Log out.' });
   }
 
   protected = async(req: Request, res: Response) => {
