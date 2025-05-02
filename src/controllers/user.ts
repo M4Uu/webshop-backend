@@ -1,11 +1,10 @@
 import { JWTMiddlewareInitial, JWTMiddlewareRefresh, JWTParse } from "../middleware/jws";
-import { UserModel } from "../models/mysql/users"
 import * as schema from "../schema/user"
 import { Request, Response } from "express"
 
 export class UserController {
-  private userModel : typeof UserModel;
-  constructor(userModel : typeof UserModel){
+  private userModel : any;
+  constructor(userModel : any){
     this.userModel = userModel
   }
 

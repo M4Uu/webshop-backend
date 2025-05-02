@@ -5,7 +5,7 @@ const LOCAL_CONFIG = {
   host: 'Cruz-PC',
   user: 'root',
   port: 3306,
-  password: 'Llsalnde1.',
+  password: '',
   database: 'users_db'
 }
 

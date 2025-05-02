@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user"
 import { UserModel } from "../models/mysql/users";
+import { UserModel as UserPostgre } from "../models/postgre/users";
 
-export const createUserRouter = ( userModel : typeof UserModel) => {
+export const createUserRouter = ( userModel : typeof UserModel | UserPostgre) => {
   const userRouter = Router()
   const userController = new UserController(userModel)
 
