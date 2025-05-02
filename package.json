@@ -4,9 +4,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "tsc": "tsc",
+    "build": "tsc",
     "start:mysql": "node build/src/servers/serversql.js",
-    "dev:mysql": "tsc && node build/src/servers/serversql.js",
+    "dev:mysql": "tsc && nodemon build/src/servers/serversql.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -144,5 +144,5 @@ SELECT * FROM articles_has_providers;
 SELECT * FROM article_has_invoice;
 SELECT * FROM direction
 
--- delete from users
---  where users.user_name = "test"
+delete from users
+ where users.user_name = "test"

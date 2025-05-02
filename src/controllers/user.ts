@@ -12,7 +12,10 @@ export class UserController {
   logOut = async(_req: Request, res: Response) => {
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
-    res.status(200).json({ message: 'Log out.' });
+    res.status(200).json({status:{
+      statusCode: 200,
+      message: 'Log out.'
+    }});
   }
 
   protected = async(req: Request, res: Response) => {
@@ -23,7 +26,13 @@ export class UserController {
       return ;
     }
     try{
-      res.status(200).json(JWTParse(token))
+      res.status(200).json({
+        payload: JWTParse(token),
+        status: {
+          statusCode: 200,
+          message: 'Account current'
+        }
+      })
     }catch{
       res.clearCookie('access_token');
       const ref_token = req.cookies['refresh_token']
@@ -43,22 +52,38 @@ export class UserController {
             maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
           }
         )
-        res.status(200).json(user)
+        res.status(200).json({
+          payload: user,
+          status: {
+            statusCode: 200,
+            message: 'Account current'
+          }
+        })
       }catch{
-        res.status(401).send('Account expired')
+        res.status(401).json({
+          status: {
+            statusCode: 401,
+            message: 'Account expired'
+          }
+        });
         return ;
       }
     }
   }
 
-  getUser = async(req : Request, res : Response) => { 
+  login = async(req : Request, res : Response) => {
     const data = await this.userModel.getUser({input: req.body})
     const user = JWTMiddlewareInitial(data)
     const ref_user = JWTMiddlewareRefresh(data?.id)
     
     try{
       if(!user) {
-        res.status(404).json({ message: 'User not found' });
+        res.status(404).json({
+          status: {
+            statusCode: 404,
+            message: 'User not found'
+          }
+        });
         return ;
       }
 
@@ -84,10 +109,20 @@ export class UserController {
           }
         )
 
-      res.status(200).send()
+        res.status(200).json({
+          status: {
+            statusCode: 200,
+            message: 'Login_success'
+          }
+      });
     }catch(error){
       console.log(error);
-      res.status(500).json({ message: 'Server error' });
+      res.status(500).json({
+        status:{
+          statusCode: 500,
+          message: 'Server_error'
+        }
+    });
       return ;
     }
   }
@@ -102,11 +137,28 @@ export class UserController {
     }
     try{
       user = await this.userModel.register({ input: result.data })
-      user ? res.status(201).send() : res.status(406).send();
+      user ?
+      res.status(201).json({
+        status: {
+          statusCode: 201,
+          message: 'Usuario registrado correctamente'
+        }
+      })
+        : res.status(406).json({
+          status: {
+            statusCode: 406,
+            message: 'Error al registarar'
+          }
+        });
     }catch(err){
       console.log(err);
-      res.status(500).json({ message: 'Server error' })
-      return ;
+      res.status(500).json({
+        status:{
+          statusCode: 500,
+          message: 'Server error'
+        }
+    });
+    return ;
     }
   }
 
@@ -119,8 +171,13 @@ export class UserController {
       res.status(400).json({ error: JSON.parse(result.error?.message as string) })
       return ;
     }
-    const ChangedUser = await this.userModel.upload({ input: result.data })
-
-    res.status(201).json(ChangedUser)
+    await this.userModel.upload({ input: result.data });
+    res.status(201).json({
+      status: {
+        statusCode: 201,
+        message: 'Datos cambiados'
+      }
+    })
+    return ;
   }
 }
