@@ -172,7 +172,14 @@ export class UserController {
   }
 
 
-  delete = async(_req : Request, _res : Response) => {}
+  delete = async(_req : Request, res : Response) => {
+    res.status(201).json({
+      status: {
+        statusCode: 200,
+        message: 'Este endpoint aún no se ha hecho, pero al menos manda un mensaje.'
+      }
+    })
+  }
 
   upload = async(req : Request, res : Response) => {
     const result = schema.validatePartialUser(req.body)
