@@ -57,7 +57,7 @@ export class UserController {
             httpOnly: true, // ;a coockie solo se puede acceder en el servidor
             // secure: true, //la coockie solo se puede acceder en https
             secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
-            sameSite: 'strict', // la coockie entre múltiples dominios (con 'strict' solo se puede acceder desde el mismo dominio)
+            sameSite: 'none', // la coockie entre múltiples dominios (con 'strict' solo se puede acceder desde el mismo dominio)
             maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
           }
         )
@@ -102,7 +102,7 @@ export class UserController {
             httpOnly: true, // ;a coockie solo se puede acceder en el servidor
             // secure: true, //la coockie solo se puede acceder en https
             secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
-            sameSite: 'strict', // la coockie entre múltiples dominios (con 'strict' solo se puede acceder desde el mismo dominio)
+            sameSite: 'none', // la coockie entre múltiples dominios (con 'none' solo se puede acceder desde el mismo dominio)
             maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
           }
         )
@@ -113,7 +113,7 @@ export class UserController {
             httpOnly: true,
             // secure: true,
             secure: process.env['NODE_ENV'] === 'production',
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: 30 * 24 * 60 * 60 * 1000
           }
         )
