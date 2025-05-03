@@ -21,7 +21,12 @@ export class UserController {
     const token = req.cookies['access_token']
 
     if(!token){
-      res.status(403).send('Access not authorized');
+      res.status(403).json({
+        status: {
+          statusCode: 403,
+          message: 'Access not authorized'
+        }
+      });
       return ;
     }
     try{
@@ -36,7 +41,12 @@ export class UserController {
       res.clearCookie('access_token');
       const ref_token = req.cookies['refresh_token']
       if(!token){
-        res.status(403).send('Access not authorized');
+        res.status(403).json({
+          status: {
+            statusCode: 403,
+            message: 'Access not authorized'
+          }
+        });
         return ;
       }
       try{
