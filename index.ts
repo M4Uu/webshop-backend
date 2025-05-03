@@ -14,6 +14,17 @@ export function App(userModel : typeof UserModel | UserPostgre) {
   app.use(cookieParser())
   app.use(express.json())
   app.use(corsMiddleware())
+
+  app.get("/", (__req, res) => {
+    res.json({
+      status: "API funcionando",
+      message: "Bienvenido a mi API",
+      endpoints: {
+        users: "/users"
+      }
+    });
+  });
+
   app.use('/users', createUserRouter(userModel))
 
   app.listen(port, () => {
