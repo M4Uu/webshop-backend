@@ -1,5 +1,5 @@
 @API_URL_PROD = https://webshop-backend-i8ee.onrender.com/api/
-@API_URL_DEV = {{API_URL_DEV}}api/
+@API_URL_DEV = http://localhost:1234/api/
 
 ###
 
