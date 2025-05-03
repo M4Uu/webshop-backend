@@ -1,4 +1,16 @@
+GET https://webshop-backend-i8ee.onrender.com
+
+
 ### test de datos por query
+POST http://localhost:1234/users/login
+Content-Type: application/json
+
+{
+  "email": "cruzmlathulerie@gmail.com",
+  "password": "1234"
+}
+
+### Test prod
 POST http://localhost:1234/users/login
 Content-Type: application/json
 

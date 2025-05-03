@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser'
 
 export function App(userModel : typeof UserModel | UserPostgre) {
   const app = express()
-  const port = process.env["PORT"] ?? 1234
+  const port = process.env["PORT"] || 1234
 
   app.disable('x-powered-by')
   
