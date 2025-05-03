@@ -15,7 +15,7 @@ export function App(userModel : typeof UserModel | UserPostgre) {
   app.use(express.json())
   app.use(corsMiddleware())
 
-  app.get("/", (__req, res) => {
+  app.get("/api", (__req, res) => {
     res.json({
       status: "API funcionando",
       message: "Bienvenido a mi API",
@@ -25,7 +25,7 @@ export function App(userModel : typeof UserModel | UserPostgre) {
     });
   });
 
-  app.use('/users', createUserRouter(userModel))
+  app.use('/api/users', createUserRouter(userModel))
 
   app.listen(port, () => {
     console.log(`Server running on port ${port}`)

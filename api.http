@@ -1,8 +1,31 @@
-GET https://webshop-backend-i8ee.onrender.com
+@API_URL_PROD = https://webshop-backend-i8ee.onrender.com/api/
+@API_URL_DEV = {{API_URL_DEV}}api/
 
+###
+
+POST {{API_URL_PROD}}users/login
+Content-Type: application/json
+
+{
+  "email": "cruzmlathulerie@gmail.com",
+  "password": "1234"
+}
+
+###
+
+POST {{API_URL_PROD}}users/register
+Content-Type: application/json
+
+{
+  "user_name" : "M4Uu",
+  "email_address" : "cruzmlathulerie@gmail.com",
+  "first_name" : "Cruz",
+  "last_name" : "Lathulerie",
+  "pswd": "1234"
+}
 
 ### test de datos por query
-POST http://localhost:1234/users/login
+POST {{API_URL_DEV}}users/login
 Content-Type: application/json
 
 {
@@ -11,7 +34,7 @@ Content-Type: application/json
 }
 
 ### Test prod
-POST http://localhost:1234/users/login
+POST {{API_URL_DEV}}users/login
 Content-Type: application/json
 
 {
@@ -20,10 +43,10 @@ Content-Type: application/json
 }
 
 ### test de autenticación de datos
-GET http://localhost:1234/users/protected?type=a
+GET {{API_URL_DEV}}users/protected?type=a
 
 ### test de registro de usuario
-POST http://localhost:1234/users/register
+POST {{API_URL_DEV}}users/register
 Content-Type: application/json
 
 {
@@ -35,7 +58,7 @@ Content-Type: application/json
 }
 
 ### Test de cambio de datos de usuario
-PATCH http://localhost:1234/users/upload
+PATCH {{API_URL_DEV}}users/upload
 Content-Type: application/json
 
 {
