@@ -83,7 +83,7 @@ export class UserController {
   login = async(req : Request, res : Response) => {
     const data = await this.userModel.getUser({input: req.body})
     const user = JWTMiddlewareInitial(data)
-    const ref_user = JWTMiddlewareRefresh(data?.id)
+    const ref_user = JWTMiddlewareRefresh(data?.user_name)
     
     try{
       if(!user) {

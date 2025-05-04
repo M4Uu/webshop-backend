@@ -17,10 +17,10 @@ export function JWTMiddlewareInitial(input: UserData | null) {
   )
 }
 
-export function JWTMiddlewareRefresh(input?: string){
-  if(!input) return null;
+export function JWTMiddlewareRefresh(user_name?: string){
+  if(!user_name) return null;
   return sign({
-    id: input
+    user_name: user_name
   },
     SECRET_JWT_KEY,
     {expiresIn: '30d'}
