@@ -11,6 +11,9 @@ Content-Type: application/json
   "password": "1234"
 }
 
+### test de autenticación de datos
+GET {{API_URL_PROD}}users/protected
+
 ###
 
 POST {{API_URL_PROD}}users/register
@@ -43,7 +46,7 @@ Content-Type: application/json
 }
 
 ### test de autenticación de datos
-GET {{API_URL_DEV}}users/protected?type=a
+GET {{API_URL_DEV}}users/protected
 
 ### test de registro de usuario
 POST {{API_URL_DEV}}users/register
