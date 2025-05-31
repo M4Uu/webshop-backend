@@ -42,7 +42,12 @@ class UserController {
     protected = async (req, res) => {
         const token = req.cookies['access_token'];
         if (!token) {
-            res.status(403).send('Access not authorized');
+            res.status(403).json({
+                status: {
+                    statusCode: 403,
+                    message: 'Access not authorized'
+                }
+            });
             return;
         }
         try {
@@ -58,7 +63,12 @@ class UserController {
             res.clearCookie('access_token');
             const ref_token = req.cookies['refresh_token'];
             if (!token) {
-                res.status(403).send('Access not authorized');
+                res.status(403).json({
+                    status: {
+                        statusCode: 403,
+                        message: 'Access not authorized'
+                    }
+                });
                 return;
             }
             try {
@@ -67,7 +77,7 @@ class UserController {
                     httpOnly: true, // ;a coockie solo se puede acceder en el servidor
                     // secure: true, //la coockie solo se puede acceder en https
                     secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
-                    sameSite: 'strict', // la coockie entre múltiples dominios (con 'strict' solo se puede acceder desde el mismo dominio)
+                    sameSite: 'none', // la coockie entre múltiples dominios (con 'strict' solo se puede acceder desde el mismo dominio)
                     maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
                 });
                 res.status(200).json({
@@ -92,7 +102,7 @@ class UserController {
     login = async (req, res) => {
         const data = await this.userModel.getUser({ input: req.body });
         const user = (0, jws_1.JWTMiddlewareInitial)(data);
-        const ref_user = (0, jws_1.JWTMiddlewareRefresh)(data?.id);
+        const ref_user = (0, jws_1.JWTMiddlewareRefresh)(data?.user_name);
         try {
             if (!user) {
                 res.status(404).json({
@@ -107,14 +117,14 @@ class UserController {
                 httpOnly: true, // ;a coockie solo se puede acceder en el servidor
                 // secure: true, //la coockie solo se puede acceder en https
                 secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
-                sameSite: 'strict', // la coockie entre múltiples dominios (con 'strict' solo se puede acceder desde el mismo dominio)
+                sameSite: 'none', // la coockie entre múltiples dominios (con 'none' solo se puede acceder desde el mismo dominio)
                 maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
             });
             res.cookie('refresh_token', ref_user, {
                 httpOnly: true,
                 // secure: true,
                 secure: process.env['NODE_ENV'] === 'production',
-                sameSite: 'strict',
+                sameSite: 'none',
                 maxAge: 30 * 24 * 60 * 60 * 1000
             });
             res.status(200).json({
@@ -169,7 +179,14 @@ class UserController {
             return;
         }
     };
-    delete = async (_req, _res) => { };
+    delete = async (_req, res) => {
+        res.status(201).json({
+            status: {
+                statusCode: 200,
+                message: 'Este endpoint aún no se ha hecho, pero al menos manda un mensaje.'
+            }
+        });
+    };
     upload = async (req, res) => {
         const result = schema.validatePartialUser(req.body);
         if (result.error) {

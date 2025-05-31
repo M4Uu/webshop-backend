@@ -40,9 +40,11 @@ class UserModel {
         const client = await pool.connect();
         try {
             const { email, password } = input;
+            // const query = `
+            //   SELECT id::text user_name, email_address, first_name, last_name, pswd, created_ad 
             const query = `
-        SELECT id::text, user_name, email_address, first_name, last_name, pswd, created_ad 
-        FROM users 
+        SELECT user_name, first_name, last_name, created_ad, img
+        FROM users
         WHERE pswd = $1 AND email_address = $2;
       `;
             const result = await client.query(query, [password, email]);

@@ -8,7 +8,8 @@ const cors_1 = __importDefault(require("cors"));
 const ACCEPTED_ORIGINS = [
     'http://localhost:1234',
     'http://localhost:9876',
-    'http://localhost:4200'
+    'http://localhost:4200',
+    'https://webshoptesis.netlify.app'
 ];
 const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => (0, cors_1.default)({
     origin: (origin, callback) => {

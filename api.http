@@ -2,7 +2,7 @@
 @API_URL_DEV = http://localhost:1234/api/
 
 ###
-POST {{API_URL_PROD}}users/login
+POST {{API_URL_DEV}}users/login
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 }
 
 ### test de datos por query
-POST {{API_URL_DEV}}users/login
+POST {{API_URL_PROD}}users/login
 Content-Type: application/json
 
 {
