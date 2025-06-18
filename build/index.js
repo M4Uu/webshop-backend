@@ -11,6 +11,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 function App(userModel) {
     const app = (0, express_1.default)();
     const port = process.env["PORT"] || 1234;
+    // Carga las variables ANTES de usarlas
     app.disable('x-powered-by');
     app.use((0, cookie_parser_1.default)());
     app.use(express_1.default.json());

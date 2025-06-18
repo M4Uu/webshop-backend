@@ -24,7 +24,7 @@ export class UserController {
       res.status(403).json({
         status: {
           statusCode: 403,
-          message: 'Access not authorized'
+          message: 'Access not authorized (Not Coockies)'
         }
       });
       return ;
@@ -100,8 +100,8 @@ export class UserController {
           user,
           {
             httpOnly: true, // ;a coockie solo se puede acceder en el servidor
-            // secure: true, //la coockie solo se puede acceder en https
-            secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
+            secure: true, //la coockie solo se puede acceder en https
+            // secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
             sameSite: 'none', // la coockie entre múltiples dominios (con 'none' solo se puede acceder desde el mismo dominio)
             maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
           }
@@ -111,8 +111,8 @@ export class UserController {
           ref_user,
           {
             httpOnly: true,
-            // secure: true,
-            secure: process.env['NODE_ENV'] === 'production',
+            secure: true,
+            // secure: process.env['NODE_ENV'] === 'production',
             sameSite: 'none',
             maxAge: 30 * 24 * 60 * 60 * 1000
           }
@@ -121,7 +121,7 @@ export class UserController {
         res.status(200).json({
           status: {
             statusCode: 200,
-            message: 'Login_success'
+            message: 'Login Success'
           }
       });
     }catch(error){

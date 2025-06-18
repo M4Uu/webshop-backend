@@ -4,10 +4,8 @@ exports.UserModel = exports.dbConfig = void 0;
 exports.testConnection = testConnection;
 const pg_1 = require("pg");
 exports.dbConfig = {
-    connectionString: 'postgresql://root:rIsvH82Fotd83O5MAfjudq6Xj4LLBKoN@dpg-d0a1oc1r0fns73e1otpg-a.oregon-postgres.render.com/webshop_db_hj94',
-    ssl: {
-        rejectUnauthorized: false
-    }
+    connectionString: "postgresql://neondb_owner:npg_pTJ4aSlGofb5@ep-flat-leaf-a59rqmvj-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require",
+    ssl: { rejectUnauthorized: false }
 };
 const pool = new pg_1.Pool(exports.dbConfig);
 async function testConnection() {
