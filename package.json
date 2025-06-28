@@ -5,9 +5,8 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "start:postgre": "node build/src/servers/serverpostgre.js",
-    "dev:postgre": "tsc && node build/src/servers/serverpostgre.js",
-    "nodemon:postgre": "nodemon",
+    "start": "node -r dotenv/config build/src/servers/serverpostgre.js",
+    "nodemon": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
