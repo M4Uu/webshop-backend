@@ -1,0 +1,1 @@
+{"version":3,"file":"serverpostgre.js","sourceRoot":"","sources":["../../src/servers/serverpostgre.ts"],"names":[],"mappings":";;;;;AAAA,mDAAoD;AACpD,qDAA2B;AAE3B,IAAA,eAAG,EAAC,iBAAS,CAAC,CAAC","sourcesContent":["import { UserModel } from \"../models/postgre/users\";\r\nimport App from \"../index\";\r\n\r\nApp(UserModel);"]}
