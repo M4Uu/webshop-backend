@@ -1,4 +1,4 @@
 import { UserModel } from "../models/postgre/users";
-import App from "../../index";
+import App from "../index";
 
 App(UserModel);

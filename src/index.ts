@@ -1,8 +1,8 @@
 import express from "express";
-import { createUserRouter } from "./src/routes/user"
-import { corsMiddleware } from "./src/middleware/cors";
-import { UserModel } from "./src/models/mysql/users";
-import { UserModel as UserPostgre } from "./src/models/postgre/users";
+import { createUserRouter } from "./routes/user"
+import { corsMiddleware } from "./middleware/cors";
+import { UserModel } from "./models/mysql/users";
+import { UserModel as UserPostgre } from "./models/postgre/users";
 import cookieParser from 'cookie-parser'
 import * as dotenv from 'dotenv';
 
