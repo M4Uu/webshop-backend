@@ -1,8 +1,9 @@
 import { Pool } from 'pg';
 import { UserData } from '../../interface/users';
+import bcrypt from 'bcryptjs';
 
 export const dbConfig = {
-  connectionString: "postgresql://neondb_owner:npg_pTJ4aSlGofb5@ep-flat-leaf-a59rqmvj-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require",
+  connectionString: process.env['DB_STRING'],
   ssl: { rejectUnauthorized: false }
 };
 
@@ -20,13 +21,18 @@ export async function testConnection() {
   }
 }
 
+async function comparePassword(password: string, storedHash: string): Promise<boolean> {
+  try {
+    const isMatch = await bcrypt.compare(password, storedHash);
+    return isMatch;
+  } catch (error) {
+    console.error("Error al comparar contraseñas:", error);
+    throw new Error("No se pudo comparar la contraseña.");
+  }
+}
+
+
 export class UserModel {
-  // static async getAll() {
-  //   const [users, tableInfo] = awaitw connection.query(
-  //     'SELECT BIN_TO_UUID(user_id), user_name, email_address, first_name, last_name, pswd, created_ad FROM users;'
-  //   )
-  //   return users;
-  // }
 
   static disconnect(connection: any) {
     connection.end(function (err: any) {
@@ -35,24 +41,24 @@ export class UserModel {
     })
   }
 
-  static async getUser({ input }: { input: { email: string; password: string } }) {
+
+  static async getUser(input: any) {
     const client = await pool.connect();
-
     try {
-      const { email, password } = input;
-
-      // const query = `
-      //   SELECT id::text user_name, email_address, first_name, last_name, pswd, created_ad 
       const query = `
-        SELECT user_name, first_name, last_name, created_ad, img
-        FROM users
-        WHERE pswd = $1 AND email_address = $2;
+        SELECT cedula, password, nombres, nombre_usuario, localidad, correo, imagen_url
+        FROM "wp_usuarios"
+        WHERE correo = $1;
       `;
 
-      const result = await client.query<UserData>(query, [password, email]);
-
-      if (result.rows.length === 0) return null;
-      return result.rows[0];
+      const result = (await client.query<any>(query, [input.correo]))
+      const user = result.rows[0];
+      const validatePassword = await comparePassword(input.password, user.password);
+      if (validatePassword) {
+        delete user.password;
+        return user;
+      }
+      return null
     } catch (error) {
       console.error('Error en getUser:', error);
       throw error;
@@ -61,19 +67,17 @@ export class UserModel {
     }
   }
 
-  static async refreshUser({ input }: { input: { id: string } }) {
+  static async refreshUser(input: any) {
     const client = await pool.connect();
 
     try {
-      const { id } = input;
-
       const query = `
-        SELECT id::text, user_name, email_address, first_name, last_name, pswd, created_ad 
-        FROM users 
-        WHERE id::text = $1;
+        SELECT cedula, nombres, nombre_usuario, localidad, correo, imagen_url
+        FROM users
+        WHERE cedula = $1;
       `;
 
-      const result = await client.query<UserData>(query, [id]);
+      const result = await client.query<UserData>(query, [input.cedula]);
 
       if (result.rows.length === 0) return null;
       return result.rows[0];
@@ -85,44 +89,38 @@ export class UserModel {
     }
   }
 
-  static async register({ input }: {
-    input: {
-      user_name: string;
-      email_address: string;
-      first_name: string;
-      last_name: string;
-      pswd: string;
-    }
-  }) {
+  static async register(input: any) {
+    const SALT_ROUNDS = 10;
     const client = await pool.connect();
-
     try {
-      const { user_name, email_address, first_name, last_name, pswd } = input;
+      const verifyResult = await client.query('SELECT * FROM "wp_usuarios" WHERE cedula = $1', [input.cedula]);
+      if (verifyResult.rows.length > 0) { return null; }
 
-      // Verificar si el usuario ya existe
-      const verifyQuery = 'SELECT * FROM users WHERE user_name = $1';
-      const verifyResult = await client.query(verifyQuery, [user_name]);
-
-      if (verifyResult.rows.length > 0) {
-        return null;
-      }
-
-      // Insertar nuevo usuario
       const insertQuery = `
-        INSERT INTO users (user_name, email_address, first_name, last_name, pswd) 
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING id::text, user_name, email_address, first_name, last_name, pswd, created_ad;
+        INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, password, localidad, correo, imagen_url)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING cedula, nombres, nombre_usuario, correo;
       `;
 
-      const insertResult = await client.query<UserData>(insertQuery, [
-        user_name,
-        email_address,
-        first_name,
-        last_name,
-        pswd
-      ]);
+      try {
+        const hashedPassword = await bcrypt.hash(input.password, SALT_ROUNDS);
 
-      return insertResult.rows[0];
+        const insertResult = await client.query<any>(insertQuery, [
+          input.cedula,
+          input.nombres,
+          input.nombre_usuario,
+          hashedPassword,
+          input.localidad,
+          input.correo,
+          input.imagen_url
+        ]);
+
+        return insertResult.rows[0];
+      } catch (hashError) {
+        console.error('Error hashing password:', hashError);
+        throw new Error('Password hashing failed');
+      }
+
     } catch (error) {
       console.error('Error en register:', error);
       throw new Error('Error creating user');
@@ -131,7 +129,6 @@ export class UserModel {
     }
   }
 
-  // static async delete({ id } : any) {}
   static async upload({ input }: {
     input: {
       user_id: string;

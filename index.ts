@@ -4,11 +4,14 @@ import { corsMiddleware } from "./src/middleware/cors";
 import { UserModel } from "./src/models/mysql/users";
 import { UserModel as UserPostgre } from "./src/models/postgre/users";
 import cookieParser from 'cookie-parser'
+import * as dotenv from 'dotenv';
 
-export function App(userModel: typeof UserModel | UserPostgre) {
+dotenv.config({ path: __dirname + '/.env' });
+
+export default function App(userModel: typeof UserModel | UserPostgre) {
 
   const app = express()
-  const port = process.env["PORT"] || 1234
+  const port = process.env["PORT"]
 
   // Carga las variables ANTES de usarlas
   app.disable('x-powered-by')

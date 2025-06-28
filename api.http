@@ -1,46 +1,14 @@
-@API_URL_PROD = https://webshop-backend-i8ee.onrender.com/api/
-@API_URL_DEV = http://localhost:1234/api/
 
+#@M4Uu
+### DEVs
+@API_URL_DEV = http://localhost:3312/api/
 ###
 POST {{API_URL_DEV}}users/login
 Content-Type: application/json
 
 {
-  "email": "cruzmlathulerie@gmail.com",
-  "password": "1234"
-}
-
-### test de autenticación de datos
-GET {{API_URL_PROD}}users/protected
-
-###
-POST {{API_URL_PROD}}users/register
-Content-Type: application/json
-
-{
-  "user_name" : "M4Uu",
-  "email_address" : "cruzmlathulerie@gmail.com",
-  "first_name" : "Cruz",
-  "last_name" : "Lathulerie",
-  "pswd": "1234"
-}
-
-### test de datos por query
-POST {{API_URL_PROD}}users/login
-Content-Type: application/json
-
-{
-  "email": "cruzmlathulerie@gmail.com",
-  "password": "1234"
-}
-
-### Test prod
-POST {{API_URL_DEV}}users/login
-Content-Type: application/json
-
-{
-  "email": "cruzmlathulerie@gmail.com",
-  "password": "1234"
+  "correo": "cruzmlathulerie@gmail.com",
+  "password": "1234567"
 }
 
 ### test de autenticación de datos
@@ -50,23 +18,58 @@ GET {{API_URL_DEV}}users/protected
 POST {{API_URL_DEV}}users/register
 Content-Type: application/json
 
-{
-  "user_name" : "M4Uu",
-  "email_address" : "cruzmlathulerie@gmail.com",
-  "first_name" : "Cruz",
-  "last_name" : "Lathulerie",
-  "pswd": "1234"
-}
+  {
+    "cedula" : 29643469,
+    "nombres" : "Cruz María Lathulerie Gonzáles",
+    "nombre_usuario" : "M4Uu",
+    "password" : "1234567",
+    "localidad" : "Villa Icabarú, Puerto Ordaz, estdo Bolívar",
+    "correo" : "cruzmlathulerie@gmail.com",
+    "imagen_url" : "https://images.steamusercontent.com/ugc/2041861391656391717/573638A641371D8C177FD8EA7BBA5390F358258D/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+  }
 
 ### Test de cambio de datos de usuario
 PATCH {{API_URL_DEV}}users/upload
 Content-Type: application/json
 
 {
-  "user_id" : "7d577e95-5437-11ef-8b6f-7440bb5683fe",
-  "user_name" : "M4Uu",
-  "email_address" : "cruzmlathulerie@gmail.com",
-  "first_name" : "Cruz",
-  "last_name" : "Lathulerie",
-  "pswd": "1234"
+  "cedula" : 29643469,
+  "nombres" : "Cruz María Lathulerie Gonzáles",
+  "nombre_usuario" : "M4Uu",
+  "password" : "1234",
+  "localidad" : "Villa Icabarú, Puerto Ordaz, Estdo Bolívar",
+  "correo" : "cruzmlathulerie@gmail.com",
+  "imagen_url" : "https://images.steamusercontent.com/ugc/2041861391656391717/573638A641371D8C177FD8EA7BBA5390F358258D/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+}
+
+
+
+### PROD
+@API_URL_PROD = https://webshop-backend-i8ee.onrender.com/api/
+
+
+### test de autenticación de datos
+GET {{API_URL_PROD}}users/protected
+
+###
+POST {{API_URL_PROD}}users/register
+Content-Type: application/json
+
+{
+  "cedula" : 29643469,
+  "nombres" : "Cruz María Lathulerie Gonzáles",
+  "nombre_usuario" : "M4Uu",
+  "password" : "1234",
+  "localidad" : "Villa Icabarú, Puerto Ordaz, Estdo Bolívar",
+  "correo" : "cruzmlathulerie@gmail.com",
+  "imagen_url" : "https://images.steamusercontent.com/ugc/2041861391656391717/573638A641371D8C177FD8EA7BBA5390F358258D/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+}
+
+### test de datos por query
+POST {{API_URL_PROD}}users/login
+Content-Type: application/json
+
+{
+  "email": "cruzmlathulerie@gmail.com",
+  "password": "1234"
 }

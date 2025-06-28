@@ -1,14 +1,13 @@
 {
   "name": "webshop-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/src/servers/serverpostgre.js",
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "start:mysql": "node build/src/servers/serversql.js",
-    "dev:mysql": "tsc && node build/src/servers/serversql.js",
     "start:postgre": "node build/src/servers/serverpostgre.js",
     "dev:postgre": "tsc && node build/src/servers/serverpostgre.js",
+    "nodemon:postgre": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,10 +18,11 @@
     "cookie-parser": "^1.4.7",
     "cors": "2.8.5",
     "dotenv": "^16.4.5",
-    "express": "4.21.1",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "3.11.4",
     "pg": "^8.15.6",
+    "ts-node": "^10.9.2",
     "webshop-backend": "file:",
     "zod": "3.23.8"
   },
@@ -33,12 +33,16 @@
     ]
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/pg": "^8.11.14",
+    "bcryptjs": "^3.0.2",
+    "nodemon": "^3.1.10",
     "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3"
   }
 }

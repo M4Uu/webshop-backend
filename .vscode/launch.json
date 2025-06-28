@@ -1,15 +1,42 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "chrome",
-      "request": "launch",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:8080",
-      "webRoot": "${workspaceFolder}"
+      "type": "node",
+      "request": "launch", // This will be your *Nodemon starter*
+      "name": "Start Nodemon (for Debug Attach)", // A clearer name
+      "preLaunchTask": "npm: build",
+      "runtimeExecutable": "nodemon", // Or "npm" if you use npm
+      "runtimeArgs": [
+        "--exec",
+        "node --inspect", // Use node with inspect to allow debugger attachment
+        "${workspaceFolder}/build/src/servers/serverpostgre.js"
+      ],
+      // "runtimeArgs": [
+      //   "run",
+      //   "nodemon:postgre" // This script from package.json uses nodemon, ts-node, etc.
+      // ],
+      "console": "internalConsole", // Crucial: See Nodemon output here
+      "internalConsoleOptions": "openOnSessionStart",
+      "envFile": "${workspaceFolder}/.env",
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**"
+      ],
+      "presentation": {
+        "hidden": true
+      }
+    },
+    {
+      "type": "node",
+      "request": "attach", // This is where the debugger connects
+      "name": "Attach to API Process (Debug)", // Renamed for clarity
+      "port": 9229, // Node.js default debug port (Nodemon launches your app with this implicitly)
+      "restart": true, // Re-attach when Nodemon restarts the app
+      "skipFiles": ["<node_internals>/**"],
+      "presentation": {
+        "hidden": true
+      }
     }
   ]
 }

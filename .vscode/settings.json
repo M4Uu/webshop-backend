@@ -13,6 +13,18 @@
       "database": "sys",
       "username": "root",
       "askForPassword": true
+    },
+    {
+      "pgOptions": {
+        "ssl": {
+          "rejectUnauthorized": true
+        }
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "PostgreSQL",
+      "name": "prod webshop",
+      "connectString": "postgresql://neondb_owner:npg_1lB2SjPqAcKE@ep-solitary-darkness-a51xyuhr-pooler.us-east-2.aws.neon.tech/webshop_db?sslmode=require"
     }
   ]
 }

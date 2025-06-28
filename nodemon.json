@@ -1,0 +1,10 @@
+{
+  "watch": [
+    "src"
+  ],
+  "ext": "ts,json",
+  "exec": "node -r dotenv/config --enable-source-maps --inspect=9229 -r ts-node/register src/servers/serverpostgre.ts",
+  "ignore": [
+    "src/**/*.spec.ts"
+  ]
+}

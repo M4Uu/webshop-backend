@@ -17,11 +17,11 @@ function JWTMiddlewareInitial(input) {
         pswd: input.pswd
     }, config_1.SECRET_JWT_KEY, { expiresIn: '1h' });
 }
-function JWTMiddlewareRefresh(user_name) {
-    if (!user_name)
+function JWTMiddlewareRefresh(cedula) {
+    if (!cedula)
         return null;
     return (0, jsonwebtoken_1.sign)({
-        user_name: user_name
+        cedula: cedula
     }, config_1.SECRET_JWT_KEY, { expiresIn: '30d' });
 }
 function JWTParse(input) {

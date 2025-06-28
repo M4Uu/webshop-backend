@@ -1,10 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = exports.dbConfig = void 0;
 exports.testConnection = testConnection;
 const pg_1 = require("pg");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 exports.dbConfig = {
-    connectionString: "postgresql://neondb_owner:npg_pTJ4aSlGofb5@ep-flat-leaf-a59rqmvj-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require",
+    connectionString: process.env['DB_STRING'],
     ssl: { rejectUnauthorized: false }
 };
 const pool = new pg_1.Pool(exports.dbConfig);
@@ -20,13 +24,17 @@ async function testConnection() {
         return false;
     }
 }
+async function comparePassword(password, storedHash) {
+    try {
+        const isMatch = await bcryptjs_1.default.compare(password, storedHash);
+        return isMatch;
+    }
+    catch (error) {
+        console.error("Error al comparar contraseñas:", error);
+        throw new Error("No se pudo comparar la contraseña.");
+    }
+}
 class UserModel {
-    // static async getAll() {
-    //   const [users, tableInfo] = awaitw connection.query(
-    //     'SELECT BIN_TO_UUID(user_id), user_name, email_address, first_name, last_name, pswd, created_ad FROM users;'
-    //   )
-    //   return users;
-    // }
     static disconnect(connection) {
         connection.end(function (err) {
             if (err)
@@ -34,21 +42,20 @@ class UserModel {
             console.log("Conexión cerrada");
         });
     }
-    static async getUser({ input }) {
+    static async getUser(input) {
         const client = await pool.connect();
         try {
-            const { email, password } = input;
-            // const query = `
-            //   SELECT id::text user_name, email_address, first_name, last_name, pswd, created_ad 
             const query = `
-        SELECT user_name, first_name, last_name, created_ad, img
-        FROM users
-        WHERE pswd = $1 AND email_address = $2;
+        SELECT cedula, password, nombres, nombre_usuario, localidad, correo, imagen_url
+        FROM "wp_usuarios"
+        WHERE correo = $1;
       `;
-            const result = await client.query(query, [password, email]);
-            if (result.rows.length === 0)
+            const result = (await client.query(query, [input.correo]));
+            return result.rows[0];
+            if (await comparePassword(input.password, result.rows[0].password))
                 return null;
             return result.rows[0];
+            ;
         }
         catch (error) {
             console.error('Error en getUser:', error);
@@ -58,16 +65,15 @@ class UserModel {
             client.release();
         }
     }
-    static async refreshUser({ input }) {
+    static async refreshUser(input) {
         const client = await pool.connect();
         try {
-            const { id } = input;
             const query = `
-        SELECT id::text, user_name, email_address, first_name, last_name, pswd, created_ad 
-        FROM users 
-        WHERE id::text = $1;
+        SELECT cedula, nombres, nombre_usuario, localidad, correo, imagen_url
+        FROM users
+        WHERE cedula = $1;
       `;
-            const result = await client.query(query, [id]);
+            const result = await client.query(query, [input.cedula]);
             if (result.rows.length === 0)
                 return null;
             return result.rows[0];
@@ -80,28 +86,29 @@ class UserModel {
             client.release();
         }
     }
-    static async register({ input }) {
+    static async register(input) {
+        const SALT_ROUNDS = 10;
         const client = await pool.connect();
         try {
-            const { user_name, email_address, first_name, last_name, pswd } = input;
-            // Verificar si el usuario ya existe
-            const verifyQuery = 'SELECT * FROM users WHERE user_name = $1';
-            const verifyResult = await client.query(verifyQuery, [user_name]);
+            const verifyResult = await client.query('SELECT * FROM "wp_usuarios" WHERE cedula = $1', [input.cedula]);
             if (verifyResult.rows.length > 0) {
                 return null;
             }
-            // Insertar nuevo usuario
             const insertQuery = `
-        INSERT INTO users (user_name, email_address, first_name, last_name, pswd) 
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING id::text, user_name, email_address, first_name, last_name, pswd, created_ad;
+        INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, password, localidad, correo, imagen_url)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING cedula, nombres, nombre_usuario, correo;
       `;
             const insertResult = await client.query(insertQuery, [
-                user_name,
-                email_address,
-                first_name,
-                last_name,
-                pswd
+                input.cedula,
+                input.nombres,
+                input.nombre_usuario,
+                (async () => {
+                    return await bcryptjs_1.default.hash(input.password, SALT_ROUNDS);
+                })(),
+                input.localidad,
+                input.correo,
+                input.imagen_url
             ]);
             return insertResult.rows[0];
         }
@@ -113,7 +120,6 @@ class UserModel {
             client.release();
         }
     }
-    // static async delete({ id } : any) {}
     static async upload({ input }) {
         const client = await pool.connect();
         try {
