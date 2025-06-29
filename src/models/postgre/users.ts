@@ -1,6 +1,5 @@
 import { Pool } from 'pg';
 import { UserData } from '../../interface/users';
-import { ThesisHasher } from 'middleware/cryptohash';
 // import bcrypt from 'bcryptjs';
 
 
@@ -57,7 +56,7 @@ export class UserModel {
       const result = (await client.query<any>(query, [input.correo]))
       const user = result.rows[0];
       // const validatePassword = await comparePassword(input.password, user.password);
-      const validatePassword = ThesisHasher.verifyHash(input.password, user.password);
+      const validatePassword = input.password == user.password;
       if (validatePassword) {
         delete user.password;
         return user;
@@ -108,13 +107,12 @@ export class UserModel {
 
       try {
         // const hashedPassword = await bcrypt.hash(input.password, SALT_ROUNDS);
-        const hashedPassword = ThesisHasher.createHash(input.password);
 
         const insertResult = await client.query<any>(insertQuery, [
           input.cedula,
           input.nombres,
           input.nombre_usuario,
-          hashedPassword,
+          input.password,
           input.localidad,
           input.correo,
           input.imagen_url
