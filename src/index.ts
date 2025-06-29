@@ -11,14 +11,14 @@ dotenv.config();
 export default function App(userModel: typeof UserModel | UserPostgre) {
 
   const app = express()
+  app.use(express.json())
+  app.use(corsMiddleware())
+
   const port = process.env["PORT"]
 
   // Carga las variables ANTES de usarlas
   app.disable('x-powered-by')
-
   app.use(cookieParser())
-  app.use(express.json())
-  app.use(corsMiddleware())
 
   app.get("/api", (__req, res) => {
     res.json({
