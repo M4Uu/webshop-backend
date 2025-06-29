@@ -1,7 +1,8 @@
 import { Pool } from 'pg';
 import { UserData } from '../../interface/users';
+import { LocalCryptoHasher } from 'middleware/cryptohash';
 // import bcrypt from 'bcryptjs';
-import { cryptoHash } from '../../middleware/cryptohash';
+
 
 export const dbConfig = {
   connectionString: process.env['DB_STRING'],
@@ -9,7 +10,7 @@ export const dbConfig = {
 };
 
 const pool = new Pool(dbConfig);
-const hash = new cryptoHash();
+const hash = new LocalCryptoHasher();
 
 export async function testConnection() {
   try {
