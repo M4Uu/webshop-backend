@@ -5,21 +5,31 @@ export class cryptoHash {
   private KEY_LENGTH = 64;
   private DIGEST = 'sha512';
 
-  createHash(password: string): string {
-    // 1. Generar salt aleatorio
-    const salt = randomBytes(16).toString('hex');
+  createHash(password: string): string | null { // Cambiado a string | null para manejar el error
+    try {
+      if (!password || typeof password !== 'string') {
+        console.error("Error: La contraseña debe ser una cadena no vacía.");
+        return null; // O lanza un error más específico
+      }
 
-    // 2. Derivar clave usando PBKDF2
-    const hash = pbkdf2Sync(
-      password,
-      salt,
-      this.ITERATIONS,
-      this.KEY_LENGTH,
-      this.DIGEST
-    ).toString('hex');
+      // 1. Generar salt aleatorio
+      const salt = randomBytes(16).toString('hex');
 
-    // 3. Devolver formato: salt:iteraciones:hash
-    return `${salt}:${this.ITERATIONS}:${hash}`;
+      // 2. Derivar clave usando PBKDF2
+      const hash = pbkdf2Sync(
+        password,
+        salt,
+        this.ITERATIONS,
+        this.KEY_LENGTH,
+        this.DIGEST
+      ).toString('hex');
+
+      // 3. Devolver formato: salt:iteraciones:hash
+      return `${salt}:${this.ITERATIONS}:${hash}`;
+    } catch (error) {
+      console.error("Error al crear el hash:", error);
+      return null; // Devuelve null o maneja el error como prefieras
+    }
   }
 
 
