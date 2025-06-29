@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 import { UserData } from '../../interface/users';
-import { cryptoHash } from 'middleware/cryptohash';
+import { ThesisHasher } from 'middleware/cryptohash';
 // import bcrypt from 'bcryptjs';
 
 
@@ -10,7 +10,6 @@ export const dbConfig = {
 };
 
 const pool = new Pool(dbConfig);
-const hash = new cryptoHash();
 
 export async function testConnection() {
   try {
@@ -58,7 +57,7 @@ export class UserModel {
       const result = (await client.query<any>(query, [input.correo]))
       const user = result.rows[0];
       // const validatePassword = await comparePassword(input.password, user.password);
-      const validatePassword = await hash.verifyHash(input.password, user.password);
+      const validatePassword = ThesisHasher.verifyHash(input.password, user.password);
       if (validatePassword) {
         delete user.password;
         return user;
@@ -109,7 +108,7 @@ export class UserModel {
 
       try {
         // const hashedPassword = await bcrypt.hash(input.password, SALT_ROUNDS);
-        const hashedPassword = await hash.createHash(input.password);
+        const hashedPassword = ThesisHasher.createHash(input.password);
 
         const insertResult = await client.query<any>(insertQuery, [
           input.cedula,
