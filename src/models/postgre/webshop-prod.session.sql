@@ -9,6 +9,4 @@ update users
 
 -- Consultas finales
 SELECT * FROM wp_usuarios;
-SELECT cedula, password, nombres, nombre_usuario, localidad, correo, imagen_url
-        FROM "wp_usuarios"
-        WHERE correo = 'test@gmail.com'
+delete from wp_usuarios where cedula = 12121121

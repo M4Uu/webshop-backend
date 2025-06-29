@@ -59,7 +59,7 @@ Content-Type: application/json
   "cedula" : 29643469,
   "nombres" : "Cruz María Lathulerie Gonzáles",
   "nombre_usuario" : "M4Uu",
-"password" : "1234",
+  "password" : "1234",
   "localidad" : "Villa Icabarú, Puerto Ordaz, Estdo Bolívar",
   "correo" : "cruzmlathulerie@gmail.com",
   "imagen_url" : "https://images.steamusercontent.com/ugc/2041861391656391717/573638A641371D8C177FD8EA7BBA5390F358258D/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
