@@ -43,6 +43,7 @@ export class UserModel {
 
 
   static async getUser(input: any) {
+    console.log(process.env['DB_STRING'])
     const client = await pool.connect();
     try {
       const query = `
