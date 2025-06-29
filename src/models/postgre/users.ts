@@ -57,6 +57,7 @@ export class UserModel {
       const user = result.rows[0];
       const validatePassword = await comparePassword(input.password, user.password);
       if (validatePassword) {
+        delete user.password;
         return user;
       }
       return null
@@ -104,7 +105,7 @@ export class UserModel {
       `;
 
       try {
-        const hashedPassword = await bcrypt.hash(input.password, SALT_ROUNDS);
+        const hashedPassword = await bcrypt.hash(input.credencial, SALT_ROUNDS);
         const insertResult = await client.query<any>(insertQuery, [
           input.cedula,
           input.nombres,

@@ -4,7 +4,7 @@ const userSchema = z.object({
   cedula: z.number(),
   nombres: z.string(),
   nombre_usuario: z.string(),
-  password: z.string(),
+  credencial: z.string(),
   localidad: z.string(),
   correo: z.string(),
   imagen_url: z.string(),
