@@ -58,7 +58,7 @@ export class UserModel {
       const result = (await client.query<any>(query, [input.correo]))
       const user = result.rows[0];
       // const validatePassword = await comparePassword(input.password, user.password);
-      const validatePassword = hash.verifyHash(input.password, user.password);
+      const validatePassword = await hash.verifyHash(input.password, user.password);
       if (validatePassword) {
         delete user.password;
         return user;
@@ -109,7 +109,7 @@ export class UserModel {
 
       try {
         // const hashedPassword = await bcrypt.hash(input.password, SALT_ROUNDS);
-        const hashedPassword = hash.createHash(input.password);
+        const hashedPassword = await hash.createHash(input.password);
 
         const insertResult = await client.query<any>(insertQuery, [
           input.cedula,
