@@ -139,6 +139,11 @@ export class UserController {
 
   register = async (req: Request, res: Response) => {
     const result = schema.validateUser(req.body)
+    res.status(200).json({
+      result: result,
+      reqbody: req.body
+    });
+    return;
     let user;
     if (result.error) {
       res.status(422).json({ error: JSON.parse(result.error?.message as string) })
