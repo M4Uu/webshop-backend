@@ -91,7 +91,7 @@ export class UserModel {
   }
 
   static async register(input: any) {
-    const SALT_ROUNDS = 4;
+    const SALT_ROUNDS = 1;
     const client = await pool.connect();
     try {
       const verifyResult = await client.query('SELECT * FROM "wp_usuarios" WHERE cedula = $1', [input.cedula]);
