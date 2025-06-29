@@ -48,16 +48,16 @@ export class UserModel {
     const client = await pool.connect();
     try {
       const query = `
-        SELECT cedula, password, nombres, nombre_usuario, localidad, correo, imagen_url
+        SELECT cedula, credencial, nombres, nombre_usuario, localidad, correo, imagen_url
         FROM "wp_usuarios"
         WHERE correo = $1;
       `;
 
       const result = (await client.query<any>(query, [input.correo]))
       const user = result.rows[0];
-      const validatePassword = await comparePassword(input.password, user.password);
+      const validatePassword = await comparePassword(input.credencial, user.credencial);
       if (validatePassword) {
-        delete user.password;
+        delete user.credencial;
         return user;
       }
       return null
@@ -99,7 +99,7 @@ export class UserModel {
       if (verifyResult.rows.length > 0) { return null; }
 
       const insertQuery = `
-        INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, password, localidad, correo, imagen_url)
+        INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, credencial, localidad, correo, imagen_url)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING cedula, nombres, nombre_usuario, correo;
       `;
