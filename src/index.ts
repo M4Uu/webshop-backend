@@ -14,7 +14,7 @@ export default function App(userModel: typeof UserModel | UserPostgre) {
   app.use(express.json())
   app.use(corsMiddleware())
 
-  const port = process.env["PORT"]
+  const port = process.env["PORT"] || 3312;
 
   // Carga las variables ANTES de usarlas
   app.disable('x-powered-by')
