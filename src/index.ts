@@ -6,7 +6,7 @@ import { UserModel as UserPostgre } from "./models/postgre/users";
 import cookieParser from 'cookie-parser'
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: __dirname + '/.env' });
+dotenv.config();
 
 export default function App(userModel: typeof UserModel | UserPostgre) {
 
