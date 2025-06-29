@@ -121,6 +121,7 @@ export class UserController {
 
       res.status(200).json({
         status: {
+          user: user,
           statusCode: 200,
           message: 'Login Success'
         }

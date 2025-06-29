@@ -57,7 +57,6 @@ export class UserModel {
       const user = result.rows[0];
       const validatePassword = await comparePassword(input.password, user.password);
       if (validatePassword) {
-        delete user.password;
         return user;
       }
       return null
@@ -101,7 +100,7 @@ export class UserModel {
       const insertQuery = `
         INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, password, localidad, correo, imagen_url)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING cedula, nombres, password, nombre_usuario, correo;
+        RETURNING cedula, nombres, nombre_usuario, correo;
       `;
 
       try {
