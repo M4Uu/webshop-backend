@@ -9,7 +9,7 @@ update users
 
 -- Consultas finales
 SELECT * FROM wp_usuarios;
-delete from wp_usuarios where cedula = 12121121
+delete from wp_usuarios where cedula = 29643469
 
 alter table wp_usuarios
 rename column password to credencial
