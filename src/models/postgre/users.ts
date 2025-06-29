@@ -92,7 +92,7 @@ export class UserModel {
   }
 
   static async register(input: any) {
-    const SALT_ROUNDS = 5;
+    // const SALT_ROUNDS = 5;
     const client = await pool.connect();
     try {
       const verifyResult = await client.query('SELECT * FROM "wp_usuarios" WHERE cedula = $1', [input.cedula]);
@@ -105,12 +105,12 @@ export class UserModel {
       `;
 
       try {
-        const hashedPassword = await bcrypt.hash(input.credencial, SALT_ROUNDS);
+        // const hashedPassword = await bcrypt.hash(input.credencial, SALT_ROUNDS);
         const insertResult = await client.query<any>(insertQuery, [
           input.cedula,
           input.nombres,
           input.nombre_usuario,
-          hashedPassword,
+          input.credencial,
           input.localidad,
           input.correo,
           input.imagen_url
