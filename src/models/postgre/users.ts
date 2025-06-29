@@ -101,7 +101,7 @@ export class UserModel {
       const insertQuery = `
         INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, password, localidad, correo, imagen_url)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING cedula, nombres, nombre_usuario, correo;
+        RETURNING cedula, nombres, password, nombre_usuario, correo;
       `;
 
       try {
