@@ -1,6 +1,8 @@
 import { Pool } from 'pg';
 import { UserData } from '../../interface/users';
-import bcrypt from 'bcryptjs';
+import { cryptoHash } from 'middleware/cryptohash';
+// import bcrypt from 'bcryptjs';
+
 
 export const dbConfig = {
   connectionString: process.env['DB_STRING'],
@@ -8,6 +10,7 @@ export const dbConfig = {
 };
 
 const pool = new Pool(dbConfig);
+const hash = new cryptoHash();
 
 export async function testConnection() {
   try {
@@ -21,15 +24,15 @@ export async function testConnection() {
   }
 }
 
-async function comparePassword(password: string, storedHash: string): Promise<boolean> {
-  try {
-    const isMatch = await bcrypt.compare(password, storedHash);
-    return isMatch;
-  } catch (error) {
-    console.error("Error al comparar contraseñas:", error);
-    throw new Error("No se pudo comparar la contraseña.");
-  }
-}
+// async function comparePassword(password: string, storedHash: string): Promise<boolean> {
+//   try {
+//     const isMatch = await bcrypt.compare(password, storedHash);
+//     return isMatch;
+//   } catch (error) {
+//     console.error("Error al comparar contraseñas:", error);
+//     throw new Error("No se pudo comparar la contraseña.");
+//   }
+// }
 
 
 export class UserModel {
@@ -54,7 +57,8 @@ export class UserModel {
 
       const result = (await client.query<any>(query, [input.correo]))
       const user = result.rows[0];
-      const validatePassword = await comparePassword(input.password, user.password);
+      // const validatePassword = await comparePassword(input.password, user.password);
+      const validatePassword = hash.verifyHash(input.password, user.password);
       if (validatePassword) {
         delete user.password;
         return user;
@@ -91,7 +95,7 @@ export class UserModel {
   }
 
   static async register(input: any) {
-    const SALT_ROUNDS = 1;
+    // const SALT_ROUNDS = 4;
     const client = await pool.connect();
     try {
       const verifyResult = await client.query('SELECT * FROM "wp_usuarios" WHERE cedula = $1', [input.cedula]);
@@ -104,7 +108,8 @@ export class UserModel {
       `;
 
       try {
-        const hashedPassword = await bcrypt.hash(input.password, SALT_ROUNDS);
+        // const hashedPassword = await bcrypt.hash(input.password, SALT_ROUNDS);
+        const hashedPassword = hash.createHash(input.password);
 
         const insertResult = await client.query<any>(insertQuery, [
           input.cedula,
