@@ -3,36 +3,22 @@
   "configurations": [
     {
       "type": "node",
-      "request": "launch", // This will be your *Nodemon starter*
-      "name": "Start Nodemon (for Debug Attach)", // A clearer name
-      "preLaunchTask": "npm: build",
-      "runtimeExecutable": "nodemon", // Or "npm" if you use npm
-      "runtimeArgs": [
-        "--exec",
-        "node --inspect", // Use node with inspect to allow debugger attachment
-        "${workspaceFolder}/build/src/servers/serverpostgre.js"
-      ],
-      // "runtimeArgs": [
-      //   "run",
-      //   "nodemon:postgre" // This script from package.json uses nodemon, ts-node, etc.
-      // ],
-      "console": "internalConsole", // Crucial: See Nodemon output here
+      "request": "launch",
+      "name": "Start Nodemon (for Debug Attach)",
+      "postDebugTask": "build",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "nodemon"],
+      "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
       "envFile": "${workspaceFolder}/.env",
-      "skipFiles": [
-        "<node_internals>/**",
-        "${workspaceFolder}/node_modules/**"
-      ],
-      "presentation": {
-        "hidden": true
-      }
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
     },
     {
       "type": "node",
-      "request": "attach", // This is where the debugger connects
-      "name": "Attach to API Process (Debug)", // Renamed for clarity
-      "port": 9229, // Node.js default debug port (Nodemon launches your app with this implicitly)
-      "restart": true, // Re-attach when Nodemon restarts the app
+      "request": "attach",
+      "name": "Attach to API Process (Debug)",
+      "port": 9229,
+      "restart": true,
       "skipFiles": ["<node_internals>/**"],
       "presentation": {
         "hidden": true

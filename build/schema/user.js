@@ -10,7 +10,7 @@ const userSchema = zod_1.default.object({
     cedula: zod_1.default.number(),
     nombres: zod_1.default.string(),
     nombre_usuario: zod_1.default.string(),
-    password: zod_1.default.string(),
+    credencial: zod_1.default.string(),
     localidad: zod_1.default.string(),
     correo: zod_1.default.string(),
     imagen_url: zod_1.default.string(),

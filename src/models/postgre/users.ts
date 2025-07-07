@@ -27,11 +27,9 @@ async function comparePassword(password: string, storedHash: string): Promise<bo
     const isMatch = await bcrypt.compare(password, storedHash);
     return isMatch;
   } catch (error) {
-    console.error("Error al comparar contraseñas:", error);
-    throw new Error("No se pudo comparar la contraseña.");
+    return false;
   }
 }
-
 
 export class UserModel {
 
@@ -44,7 +42,6 @@ export class UserModel {
 
 
   static async getUser(input: any) {
-    console.log(process.env['DB_STRING'])
     const client = await pool.connect();
     try {
       const query = `
@@ -92,7 +89,7 @@ export class UserModel {
   }
 
   static async register(input: any) {
-    // const SALT_ROUNDS = 5;
+    const SALT_ROUNDS = 5;
     const client = await pool.connect();
     try {
       const verifyResult = await client.query('SELECT * FROM "wp_usuarios" WHERE cedula = $1', [input.cedula]);
@@ -105,12 +102,12 @@ export class UserModel {
       `;
 
       try {
-        // const hashedPassword = await bcrypt.hash(input.credencial, SALT_ROUNDS);
+        const hashedPassword = await bcrypt.hash(input.credencial, SALT_ROUNDS);
         const insertResult = await client.query<any>(insertQuery, [
           input.cedula,
           input.nombres,
           input.nombre_usuario,
-          input.credencial,
+          hashedPassword,
           input.localidad,
           input.correo,
           input.imagen_url

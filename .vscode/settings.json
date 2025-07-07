@@ -1,0 +1,16 @@
+{
+  "sqltools.connections": [
+    {
+      "pgOptions": {
+        "ssl": {
+          "rejectUnauthorized": true
+        }
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "PostgreSQL",
+      "name": "webshob prod",
+      "connectString": "postgresql://neondb_owner:npg_1lB2SjPqAcKE@ep-solitary-darkness-a51xyuhr.us-east-2.aws.neon.tech/webshop_db?sslmode=require&channel_binding=require"
+    }
+  ]
+}

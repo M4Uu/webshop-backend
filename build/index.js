@@ -42,15 +42,15 @@ const user_1 = require("./routes/user");
 const cors_1 = require("./middleware/cors");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dotenv = __importStar(require("dotenv"));
-dotenv.config({ path: __dirname + '/.env' });
+dotenv.config();
 function App(userModel) {
     const app = (0, express_1.default)();
-    const port = process.env["PORT"];
+    app.use(express_1.default.json());
+    app.use((0, cors_1.corsMiddleware)());
+    const port = process.env["PORT"] || 3312;
     // Carga las variables ANTES de usarlas
     app.disable('x-powered-by');
     app.use((0, cookie_parser_1.default)());
-    app.use(express_1.default.json());
-    app.use((0, cors_1.corsMiddleware)());
     app.get("/api", (__req, res) => {
         res.json({
             status: "API funcionando",

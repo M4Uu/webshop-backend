@@ -30,8 +30,7 @@ async function comparePassword(password, storedHash) {
         return isMatch;
     }
     catch (error) {
-        console.error("Error al comparar contraseñas:", error);
-        throw new Error("No se pudo comparar la contraseña.");
+        return false;
     }
 }
 class UserModel {
@@ -46,15 +45,15 @@ class UserModel {
         const client = await pool.connect();
         try {
             const query = `
-        SELECT cedula, password, nombres, nombre_usuario, localidad, correo, imagen_url
+        SELECT cedula, credencial, nombres, nombre_usuario, localidad, correo, imagen_url
         FROM "wp_usuarios"
         WHERE correo = $1;
       `;
             const result = (await client.query(query, [input.correo]));
             const user = result.rows[0];
-            const validatePassword = await comparePassword(input.password, user.password);
+            const validatePassword = await comparePassword(input.credencial, user.credencial);
             if (validatePassword) {
-                delete user.password;
+                delete user.credencial;
                 return user;
             }
             return null;
@@ -89,7 +88,7 @@ class UserModel {
         }
     }
     static async register(input) {
-        const SALT_ROUNDS = 10;
+        // const SALT_ROUNDS = 5;
         const client = await pool.connect();
         try {
             const verifyResult = await client.query('SELECT * FROM "wp_usuarios" WHERE cedula = $1', [input.cedula]);
@@ -97,17 +96,17 @@ class UserModel {
                 return null;
             }
             const insertQuery = `
-        INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, password, localidad, correo, imagen_url)
+        INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, credencial, localidad, correo, imagen_url)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING cedula, nombres, nombre_usuario, correo;
       `;
             try {
-                const hashedPassword = await bcryptjs_1.default.hash(input.password, SALT_ROUNDS);
+                // const hashedPassword = await bcrypt.hash(input.credencial, SALT_ROUNDS);
                 const insertResult = await client.query(insertQuery, [
                     input.cedula,
                     input.nombres,
                     input.nombre_usuario,
-                    hashedPassword,
+                    input.credencial,
                     input.localidad,
                     input.correo,
                     input.imagen_url
