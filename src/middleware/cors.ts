@@ -5,6 +5,7 @@ const ACCEPTED_ORIGINS = [
   'http://localhost:9876',
   'http://localhost:4200',
   'https://webshoptesis.netlify.app',
+  'https://www.webshoptesis.netlify.app',
 ]
 
 export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({

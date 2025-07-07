@@ -8,7 +8,7 @@ Content-Type: application/json
 
 {
   "correo": "cruzmlathulerie@gmail.com",
-  "password": "1234567"
+  "credencial": "1234567"
 }
 
 ### test de autenticación de datos

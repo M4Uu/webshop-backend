@@ -149,7 +149,7 @@ export class UserModel {
             last_name = $4,
             pswd = $5
         WHERE id::text = $6
-        RETURNING id::text, user_name, email_address, first_name, last_name, pswd, created_ad;
+        RETURNING id::text, user_name, email_address, first_name, last_name, pswd, created_at;
       `;
 
       const updateResult = await client.query<any>(updateQuery, [
