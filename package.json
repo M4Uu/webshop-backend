@@ -4,7 +4,7 @@
   "main": "build/src/servers/serverpostgre.js",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "build": "tsc",
     "start": "node build/src/servers/serverpostgre.js",
     "nodemon": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
