@@ -1,0 +1,1 @@
+{"version":3,"file":"serversql.js","sourceRoot":"","sources":["../../src/servers/serversql.ts"],"names":[],"mappings":";;;;;AAAA,iDAAkD;AAClD,2CAAqB;AAErB,IAAA,WAAG,EAAC,iBAAS,CAAC,CAAA","sourcesContent":["import { UserModel } from \"../models/mysql/users\";\r\nimport App from \"..\";\r\n\r\nApp(UserModel)"]}
