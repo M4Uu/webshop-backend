@@ -1,5 +1,4 @@
 import { Pool } from 'pg';
-import { UserData } from '../../interface/users';
 import bcrypt from 'bcryptjs';
 
 
@@ -50,7 +49,7 @@ export class UserModel {
         WHERE correo = $1;
       `;
 
-      const result = (await client.query<any>(query, [input.correo]))
+      const result = await client.query<any>(query, [input.correo])
       const user = result.rows[0];
       const validatePassword = await comparePassword(input.credencial, user.credencial);
       if (validatePassword) {
@@ -76,7 +75,7 @@ export class UserModel {
         WHERE cedula = $1;
       `;
 
-      const result = await client.query<UserData>(query, [input.cedula]);
+      const result = await client.query<any>(query, [input.cedula]);
 
       if (result.rows.length === 0) return null;
       return result.rows[0];
@@ -153,7 +152,7 @@ export class UserModel {
         RETURNING id::text, user_name, email_address, first_name, last_name, pswd, created_ad;
       `;
 
-      const updateResult = await client.query<UserData>(updateQuery, [
+      const updateResult = await client.query<any>(updateQuery, [
         user_name,
         email_address,
         first_name,

@@ -16,7 +16,6 @@ export default function App(userModel: typeof UserModel | UserPostgre) {
 
   const port = process.env["PORT"] || 3312;
 
-  // Carga las variables ANTES de usarlas
   app.disable('x-powered-by')
   app.use(cookieParser())
 
@@ -31,6 +30,13 @@ export default function App(userModel: typeof UserModel | UserPostgre) {
   });
 
   app.use('/api/users', createUserRouter(userModel))
+  app.get('/health', (__req, res) => {
+    res.status(200).json({
+      status: 'OK',
+      memory: process.memoryUsage(),
+      uptime: process.uptime()
+    });
+  });
 
   app.listen(port, () => {
     console.log(`Server running on port ${port}`)
