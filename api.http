@@ -8,7 +8,7 @@ Content-Type: application/json
 
 {
   "correo": "cruzmlathulerie@gmail.com",
-  "credencial": "1234567"
+  "credencial": "123"
 }
 
 ### test de autenticación de datos
@@ -71,5 +71,5 @@ Content-Type: application/json
 
 {
   "email": "cruzmlathulerie@gmail.com",
-  "credencial": "1234567"
+  "credencial": "123"
 }
