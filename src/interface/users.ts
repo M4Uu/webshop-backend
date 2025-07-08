@@ -7,11 +7,11 @@ export interface Time extends RowDataPacket {
   time: string
 }
 export interface UserData extends RowDataPacket {
-  id: string,
-  user_name: string,
-  email_address: string,
-  first_name: string,
-  last_name: string,
-  pswd: string,
-  created_ad: string
+  cedula: number,
+  credencial: string,
+  nombres: string,
+  nombre_usuario: string,
+  localidad: string,
+  correo: string,
+  imagen_url: string,
 }

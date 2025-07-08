@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
+import { UserData } from 'interface/users';
 
 
 export const dbConfig = {
