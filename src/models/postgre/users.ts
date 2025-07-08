@@ -94,8 +94,8 @@ export class UserModel {
       if (verifyResult.rows.length > 0) { return null; }
 
       const insertQuery = `
-        INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, credencial, localidad, correo, imagen_url)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO "wp_usuarios" (cedula, nombres, nombre_usuario, credencial, correo)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING cedula, nombres, nombre_usuario, correo;
       `;
 
@@ -106,9 +106,7 @@ export class UserModel {
           input.nombres,
           input.nombre_usuario,
           hashedPassword,
-          input.localidad,
-          input.correo,
-          input.imagen_url
+          input.correo
         ]);
 
         return insertResult.rows[0];
