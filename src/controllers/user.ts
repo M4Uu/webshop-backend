@@ -11,7 +11,7 @@ export class UserController {
   logOut = async (_req: Request, res: Response) => {
     const cookieOptions = {
       path: '/',
-      secure: true,
+      secure: process.env['NODE_ENV'] === 'production',
       sameSite: 'none' as const
     };
     res.clearCookie('access_token', cookieOptions);
