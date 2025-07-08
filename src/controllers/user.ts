@@ -10,9 +10,8 @@ export class UserController {
 
   logOut = async (_req: Request, res: Response) => {
     const cookieOptions = {
-      domain: 'https://webshop-backend-i8ee.onrender.com',
       path: '/',
-      secure: process.env['NODE_ENV'] === 'production',
+      secure: true,
       sameSite: 'none' as const
     };
     res.clearCookie('access_token', cookieOptions);
@@ -63,7 +62,7 @@ export class UserController {
           user,
           {
             httpOnly: true,
-            secure: process.env['NODE_ENV'] === 'production',
+            secure: true,
             sameSite: 'none',
             maxAge: 1000 * 60 * 60
           }
@@ -106,7 +105,7 @@ export class UserController {
         user,
         {
           httpOnly: true, // ;a coockie solo se puede acceder en el servidor
-          secure: process.env['NODE_ENV'] === 'production', //la coockie solo se puede acceder en https
+          secure: true, //la coockie solo se puede acceder en https
           sameSite: 'none', // la coockie entre múltiples dominios (con 'none' solo se puede acceder desde el mismo dominio)
           maxAge: 1000 * 60 * 60 // tiempo de duración de la cookie
         }
@@ -116,7 +115,7 @@ export class UserController {
         ref_user,
         {
           httpOnly: true,
-          secure: process.env['NODE_ENV'] === 'production',
+          secure: true,
           sameSite: 'none',
           maxAge: 30 * 24 * 60 * 60 * 1000
         }
