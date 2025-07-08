@@ -84,10 +84,6 @@ export class UserController {
 
   login = async (req: Request, res: Response) => {
     const data = await this.userModel.getUser(req.body)
-    res.status(200).json({
-      data: data,
-      reqbody: req.body
-    });
     if (!data) {
       res.status(401).json({
         status: {
@@ -97,8 +93,8 @@ export class UserController {
       });
       return;
     }
-    const user = JWTMiddlewareInitial(data)
-    const ref_user = JWTMiddlewareRefresh(data.cedula)
+    const user = JWTMiddlewareInitial(data);
+    const ref_user = JWTMiddlewareRefresh(data.cedula);
 
     try {
       res.cookie('access_token',
