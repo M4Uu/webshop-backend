@@ -45,7 +45,7 @@ export class UserModel {
       const query = `
         SELECT cedula, credencial, nombres, nombre_usuario, localidad, correo, imagen_url
         FROM wp_usuarios
-        WHERE correo = $1;
+        WHERE correo = TRIM($1);
       `;
 
       const result = await client.query<any>(query, [input.correo])
