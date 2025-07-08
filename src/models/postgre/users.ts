@@ -1,7 +1,5 @@
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
-import { UserData } from 'interface/users';
-
 
 export const dbConfig = {
   connectionString: process.env['DB_STRING'],
@@ -46,11 +44,11 @@ export class UserModel {
     try {
       const query = `
         SELECT cedula, credencial, nombres, nombre_usuario, localidad, correo, imagen_url
-        FROM "wp_usuarios"
+        FROM wp_usuarios
         WHERE correo = $1;
       `;
 
-      const result = await client.query<UserData>(query, [input.correo])
+      const result = await client.query<any>(query, [input.correo])
       return result;
       const user = result.rows[0];
       const validatePassword = await comparePassword(input.credencial, user.credencial);
