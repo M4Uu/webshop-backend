@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
+import { UserData } from 'interface/users';
 
 
 export const dbConfig = {
@@ -49,7 +50,7 @@ export class UserModel {
         WHERE correo = $1;
       `;
 
-      const result = await client.query<any>(query, [input.correo])
+      const result = await client.query<UserData>(query, [input.correo])
       return result;
       const user = result.rows[0];
       const validatePassword = await comparePassword(input.credencial, user.credencial);
