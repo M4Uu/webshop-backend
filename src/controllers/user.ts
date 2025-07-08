@@ -12,7 +12,7 @@ export class UserController {
     const cookieOptions = {
       domain: 'https://webshop-backend-i8ee.onrender.com',
       path: '/',
-      secure: true,
+      secure: process.env['NODE_ENV'] === 'production',
       sameSite: 'none' as const
     };
     res.clearCookie('access_token', cookieOptions);
