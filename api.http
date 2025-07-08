@@ -70,6 +70,6 @@ POST {{API_URL_PROD}}users/login
 Content-Type: application/json
 
 {
-  "email": "cruzmlathulerie@gmail.com",
+  "correo": "cruzmlathulerie@gmail.com",
   "credencial": "123"
 }

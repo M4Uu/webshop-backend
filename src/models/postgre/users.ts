@@ -49,11 +49,10 @@ export class UserModel {
       `;
 
       const result = await client.query<any>(query, [input.correo])
-      return result;
       const user = result.rows[0];
       const validatePassword = await comparePassword(input.credencial, user.credencial);
       if (validatePassword) {
-        // delete user.credencial;
+        delete user.credencial;
         return user;
       }
       return null
