@@ -47,6 +47,7 @@ export class UserModel {
         FROM wp_usuarios
         WHERE correo = TRIM($1);
       `;
+      return input;
 
       const result = await client.query<any>(query, [input.correo])
       return result;
