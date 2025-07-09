@@ -102,7 +102,7 @@ export class UserModel {
       try {
         const hashedPassword = await bcrypt.hash(input.credencial, SALT_ROUNDS);
         const insertResult = await client.query<any>(insertQuery, [
-          Number(input.cedula),
+          input.cedula,
           input.nombres,
           input.nombre_usuario,
           hashedPassword,

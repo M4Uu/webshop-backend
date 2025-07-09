@@ -139,6 +139,7 @@ export class UserController {
   }
 
   register = async (req: Request, res: Response) => {
+    req.body.cedula = parseInt(req.body.cedula, 10);
     const result = schema.validateUser(req.body)
     let user;
     if (result.error) {
