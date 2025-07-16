@@ -86,7 +86,8 @@ export class UserController {
   }
 
   login = async (req: Request, res: Response) => {
-    const data = await this.userModel.getUser(req.body)
+    const body = schema.validatePartialUser(req.body)
+    const data = await this.userModel.getUser(body.data);
     if (!data) {
       res.status(401).json({
         status: {
@@ -140,7 +141,7 @@ export class UserController {
 
   register = async (req: Request, res: Response) => {
     req.body.cedula = Number(req.body.cedula);
-    const result = schema.validateUser(req.body)
+    const result = schema.validatePartialUser(req.body)
     let user;
     if (result.error) {
       res.status(422).json({ error: JSON.parse(result.error?.message as string) })
@@ -183,17 +184,56 @@ export class UserController {
     })
   }
 
-  upload = async (req: Request, res: Response) => {
+  update = async (req: Request, res: Response) => {
     const result = schema.validatePartialUser(req.body)
     if (result.error) {
       res.status(400).json({ error: JSON.parse(result.error?.message as string) })
       return;
     }
-    await this.userModel.upload({ input: result.data });
+    await this.userModel.update(result.data);
     res.status(201).json({
       status: {
         statusCode: 201,
-        message: 'Datos cambiados'
+        message: 'Datos cambiados (Perfil)'
+      }
+    })
+    return;
+  }
+
+  getMovil = async (req: Request, res: Response) => {
+    const body = schema.validatePartialUser(req.body);
+    try {
+      const result = await this.userModel.getMovil(body.data?.cedula);
+      res.status(200).json({
+        data: result,
+        status: {
+          statusCode: 200,
+          message: 'Datos cambiados'
+        }
+      })
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        status: {
+          statusCode: 500,
+          message: 'Server error'
+        }
+      });
+      return;
+    }
+  }
+
+  updateMovil = async (req: Request, res: Response) => {
+    const result = schema.validatePartialUser(req.body)
+    if (result.error) {
+      res.status(400).json({ error: JSON.parse(result.error?.message as string) })
+      return;
+    }
+    await this.userModel.updateMovil(result.data);
+    res.status(201).json({
+      status: {
+        statusCode: 201,
+        message: 'Datos cambiados (Móvil)'
       }
     })
     return;

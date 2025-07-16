@@ -8,6 +8,8 @@ const userSchema = z.object({
   localidad: z.string(),
   correo: z.string(),
   imagen_url: z.string(),
+  telefono: z.string(),
+  banco_num: z.number(),
 })
 
 

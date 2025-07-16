@@ -1,14 +1,17 @@
 import express from "express";
-import { createUserRouter } from "./routes/user"
 import { corsMiddleware } from "./middleware/cors";
-import { UserModel } from "./models/mysql/users";
-import { UserModel as UserPostgre } from "./models/postgre/users";
 import cookieParser from 'cookie-parser'
 import * as dotenv from 'dotenv';
 
+import { createUserRouter } from "./routes/user"
+import { createMovilRouter } from "./routes/movil";
+
+import { UserModel } from "./models/postgre/users";
+
+
 dotenv.config();
 
-export default function App(userModel: typeof UserModel | UserPostgre) {
+export default function App(userModel: typeof UserModel) {
 
   const app = express()
   app.use(express.json())
@@ -19,6 +22,7 @@ export default function App(userModel: typeof UserModel | UserPostgre) {
   app.disable('x-powered-by')
   app.use(cookieParser())
 
+  // Rutas para cronjobs y revisión de vida
   app.get("/api", (__req, res) => {
     res.json({
       status: "API funcionando",
@@ -28,8 +32,6 @@ export default function App(userModel: typeof UserModel | UserPostgre) {
       }
     });
   });
-
-  app.use('/api/users', createUserRouter(userModel))
   app.get('/health', (__req, res) => {
     res.status(200).json({
       status: 'OK',
@@ -37,6 +39,11 @@ export default function App(userModel: typeof UserModel | UserPostgre) {
       uptime: process.uptime()
     });
   });
+
+  // Rutas reales
+  app.use('/api/users', createUserRouter(userModel));
+  app.use('/api/movil', createMovilRouter());
+
 
   app.listen(port, () => {
     console.log(`Server running on port ${port}`)

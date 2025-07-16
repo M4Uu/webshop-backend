@@ -29,18 +29,36 @@ Content-Type: application/json
   }
 
 ### Test de cambio de datos de usuario
-PATCH {{API_URL_DEV}}users/upload
+PATCH {{API_URL_DEV}}users/update
 Content-Type: application/json
 
 {
-  "cedula" : 29643469,
+  "cedula": 29643469,
   "nombres" : "Cruz María Lathulerie Gonzáles",
   "nombre_usuario" : "M4Uu",
-  "password" : "1234",
   "localidad" : "Villa Icabarú, Puerto Ordaz, Estdo Bolívar",
-  "correo" : "cruzmlathulerie@gmail.com",
-  "imagen_url" : "https://images.steamusercontent.com/ugc/2041861391656391717/573638A641371D8C177FD8EA7BBA5390F358258D/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+  "correo" : "cruzmlathulerie@gmail.com"
 }
+### Test de cambio de datos de usuario (Pago Móvil)
+PATCH {{API_URL_DEV}}users/updatemovil
+Content-Type: application/json
+
+{
+  "cedula": 29643469,
+  "telefono": "0412-9999999",
+  "banco_num": 120
+}
+
+### Test: Obtener datos bancarios
+POST {{API_URL_DEV}}users/getmovil
+Content-Type: application/json
+
+{
+  "cedula": 29643469
+}
+
+### Test: Obtener datos de bancos (Nombres y códigos)
+get {{API_URL_DEV}}movil/listbanks
 
 
 

@@ -23,3 +23,9 @@ set
    alter column imagen_url
 set
    default 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
+
+--
+ALTER TABLE wp_usuarios ALTER COLUMN localidad TYPE VARCHAR(255);
+
+-- Permitir valores nulos en la columna
+ALTER TABLE wp_usuarios ALTER COLUMN localidad DROP NOT NULL;

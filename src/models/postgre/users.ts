@@ -69,7 +69,7 @@ export class UserModel {
 
     try {
       const query = `
-        SELECT cedula, nombres, nombre_usuario, localidad, correo, imagen_url
+        SELECT nombres, nombre_usuario, localidad, correo, imagen_url
         FROM users
         WHERE cedula = $1;
       `;
@@ -123,45 +123,61 @@ export class UserModel {
     }
   }
 
-  static async upload({ input }: {
-    input: {
-      user_id: string;
-      user_name: string;
-      email_address: string;
-      first_name: string;
-      last_name: string;
-      pswd: string;
-    }
-  }) {
+  static async update(input: any) {
     const client = await pool.connect();
 
     try {
-      const { user_id, user_name, email_address, first_name, last_name, pswd } = input;
-
       const updateQuery = `
-        UPDATE users
-        SET user_name = $1,
-            email_address = $2,
-            first_name = $3,
-            last_name = $4,
-            pswd = $5
-        WHERE id::text = $6
-        RETURNING id::text, user_name, email_address, first_name, last_name, pswd, created_at;
+        UPDATE "wp_usuarios"
+        SET nombres = $1,
+            nombre_usuario = $2,
+            localidad = $3,
+            correo = $4
+        WHERE cedula = $5
+        RETURNING cedula, nombres, nombre_usuario, localidad, correo;
       `;
 
       const updateResult = await client.query<any>(updateQuery, [
-        user_name,
-        email_address,
-        first_name,
-        last_name,
-        pswd,
-        user_id
+        input.nombres,
+        input.nombre_usuario,
+        input.localidad,
+        input.correo,
+        input.cedula
       ]);
 
       if (updateResult.rows.length === 0) return null;
       return updateResult.rows[0];
     } catch (error) {
-      console.error('Error en upload:', error);
+      console.error('Error en update:', error);
+      throw new Error('Error updating user');
+    } finally {
+      client.release();
+    }
+  }
+
+  static async updateMovil(input: any) {
+    const client = await pool.connect();
+
+    try {
+      const updateQuery = `
+        UPDATE "wp_usuarios"
+        SET telefono = $1,
+            cedula = $2,
+            banco_num = $3
+        WHERE cedula = $2
+        RETURNING cedula, telefono, banco_num;
+      `;
+
+      const updateResult = await client.query<any>(updateQuery, [
+        input.telefono,
+        input.cedula,
+        input.banco_num
+      ]);
+
+      if (updateResult.rows.length === 0) return null;
+      return updateResult.rows[0];
+    } catch (error) {
+      console.error('Error en update:', error);
       throw new Error('Error updating user');
     } finally {
       client.release();
@@ -180,6 +196,24 @@ export class UserModel {
     } catch (error) {
       console.error('Error en delete:', error);
       throw new Error('Error deleting user');
+    } finally {
+      client.release();
+    }
+  }
+
+  static async getMovil(cedula: string) {
+    const client = await pool.connect();
+    try {
+      const query = `
+        SELECT telefono, banco_num
+        FROM wp_usuarios
+        WHERE cedula = $1;`;
+
+      const result = await client.query<any>(query, [cedula])
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error en getUser:', error);
+      throw error;
     } finally {
       client.release();
     }
