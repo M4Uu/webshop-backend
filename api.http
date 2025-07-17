@@ -91,3 +91,5 @@ Content-Type: application/json
   "correo": "cruzmlathulerie@gmail.com",
   "credencial": "123"
 }
+### Test: Obtener datos de bancos (Nombres y códigos)
+get {{API_URL_PROD}}movil/listbanks
