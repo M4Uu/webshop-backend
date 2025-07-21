@@ -1,4 +1,4 @@
-[
+export const getBancos = () => [
   {
     "label": "Banco de Venezuela",
     "value": 101

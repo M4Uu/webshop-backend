@@ -1,21 +1,17 @@
 import { Request, Response } from "express"
-import fs from 'fs';
-import path from 'path';
 import { ResponsekitService as resService } from "../middleware/responsekit";
 import storj from '../middleware/storj';
 import sharp from 'sharp';
 import { randomUUID } from 'crypto'
 import { UserModel } from "../models/postgre/users";
+import { getBancos } from "../models/json/bancos";
 
 
 export class ToolkitController {
-  protected json_path_banklist = path.join(__dirname, 'models/json/bancos.json');
 
   listbanks = async (_req: Request, res: Response) => {
     try {
-      resService.resWithData(res, 200, 'Respuesta exitosa',
-        JSON.parse(fs.readFileSync(this.json_path_banklist, 'utf-8'))
-      );
+      resService.resWithData(res, 200, 'Respuesta exitosa', getBancos());
     } catch (error: any) {
       resService.resNotData(res, 500, 'Server error:' + error);
     }
