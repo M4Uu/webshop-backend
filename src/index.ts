@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser'
 import * as dotenv from 'dotenv';
 
 import { createUserRouter } from "./routes/user"
-import { createMovilRouter } from "./routes/movil";
+import { createToolkitController } from "./routes/toolkit";
 
 import { UserModel } from "./models/postgre/users";
 
@@ -42,7 +42,7 @@ export default function App(userModel: typeof UserModel) {
 
   // Rutas reales
   app.use('/api/users', createUserRouter(userModel));
-  app.use('/api/movil', createMovilRouter());
+  app.use('/api/toolkit', createToolkitController());
 
 
   app.listen(port, () => {

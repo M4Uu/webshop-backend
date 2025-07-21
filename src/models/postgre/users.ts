@@ -184,6 +184,32 @@ export class UserModel {
     }
   }
 
+  static async updateImage(input: any) {
+    const client = await pool.connect();
+
+    try {
+      const updateQuery = `
+        UPDATE "wp_usuarios"
+        SET imagen_url = $1
+        WHERE cedula = $2
+        RETURNING cedula, imagen_url
+      `;
+
+      const updateResult = await client.query<any>(updateQuery, [
+        input.imagen_url,
+        input.cedula,
+      ]);
+
+      if (updateResult.rows.length === 0) return null;
+      return updateResult.rows[0];
+    } catch (error) {
+      console.error('Error en update:', error);
+      throw new Error('Error updating user');
+    } finally {
+      client.release();
+    }
+  }
+
   static async delete({ id }: { id: string }) {
     const client = await pool.connect();
 

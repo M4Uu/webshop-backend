@@ -60,6 +60,9 @@ Content-Type: application/json
 ### Test: Obtener datos de bancos (Nombres y códigos)
 get {{API_URL_DEV}}movil/listbanks
 
+### Test: Probando enpoint de Storj
+get https://link.storjshare.io/s/jwto3t44gmq7snmhq7y6ucpsjksq/tesis-webshop-bucket
+
 
 
 ### PROD
