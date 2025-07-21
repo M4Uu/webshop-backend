@@ -16,7 +16,7 @@ export class ToolkitController {
         JSON.parse(fs.readFileSync(this.json_path_banklist, 'utf-8'))
       );
     } catch (error: any) {
-      resService.resNotData(res, 500, 'Server error')
+      resService.resNotData(res, 500, 'Server error:' + error);
     }
   }
 
