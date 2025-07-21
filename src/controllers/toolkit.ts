@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import fs from 'fs';
+import path from 'path';
 import { ResponsekitService as resService } from "../middleware/responsekit";
 import storj from '../middleware/storj';
 import sharp from 'sharp';
@@ -8,7 +9,7 @@ import { UserModel } from "../models/postgre/users";
 
 
 export class ToolkitController {
-  protected json_path_banklist = '..\\models\\json\\bancos.json'
+  protected json_path_banklist = path.join(__dirname, '../models/json/bancos.json');
 
   listbanks = async (_req: Request, res: Response) => {
     try {
