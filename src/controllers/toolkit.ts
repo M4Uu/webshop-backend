@@ -9,7 +9,7 @@ import { UserModel } from "../models/postgre/users";
 
 
 export class ToolkitController {
-  protected json_path_banklist = path.join(__dirname, '../models/json/bancos.json');
+  protected json_path_banklist = path.join(__dirname, 'models/json/bancos.json');
 
   listbanks = async (_req: Request, res: Response) => {
     try {
