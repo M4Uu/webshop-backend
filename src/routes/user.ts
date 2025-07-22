@@ -9,10 +9,13 @@ export const createUserRouter = (userModel: typeof UserPostgre) => {
   // ENDPOINTS
   userRouter.get('/protected', userController.protected);
   userRouter.get('/logout', userController.logOut);
+
   userRouter.post('/login', userController.login);
   userRouter.post('/register', userController.register);
-  userRouter.patch('/update', userController.update);
   userRouter.post('/getmovil', userController.getMovil);
+  userRouter.post('/getroles', userController.getRoles);
+
+  userRouter.patch('/update', userController.update);
   userRouter.patch('/updatemovil', userController.updateMovil);
 
   return userRouter;

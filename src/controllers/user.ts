@@ -121,4 +121,15 @@ export class UserController {
     resService.resNotData(res, 201, 'Datos Cambiados (Móvil)');
     return;
   }
+
+  getRoles = async (req: Request, res: Response) => {
+    const result = schema.validatePartialUser(req.body)
+    if (result.error) {
+      resService.resError(res, 400, result.error);
+      return;
+    }
+    const data = await this.userModel.getRoles(result.data.cedula);
+    resService.resWithData(res, 200, 'Consulta exitosa', data);
+    return;
+  }
 }

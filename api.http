@@ -58,10 +58,22 @@ Content-Type: application/json
 }
 
 ### Test: Obtener datos de bancos (Nombres y códigos)
-get {{API_URL_DEV}}movil/listbanks
+get {{API_URL_DEV}}toolkit/listbanks
 
 ### Test: Probando enpoint de Storj
 get https://link.storjshare.io/s/jwto3t44gmq7snmhq7y6ucpsjksq/tesis-webshop-bucket
+
+### Test: Consulta de roles a un usuario
+post {{API_URL_DEV}}users/getroles
+Content-Type: application/json
+
+{
+  "cedula": 29643469
+}
+
+###
+
+-------------------------------------------------------------------------------------------------------
 
 
 

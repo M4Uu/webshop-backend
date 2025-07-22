@@ -108,6 +108,13 @@ export class UserModel {
           hashedPassword,
           input.correo
         ]);
+        try {
+          const verifyResult = await client.query('insert into "wp_rol_usuario" (usuario_cedula, rol_id) values ($1, $2); ', [input.cedula, 1]);
+          console.log('Error al insertar roles al usuario:', verifyResult);
+        } catch (reason) {
+          console.log('Error en query "Insertar roles": ', reason);
+          return;
+        }
 
         return insertResult.rows[0];
       } catch (hashError) {
@@ -239,6 +246,29 @@ export class UserModel {
       return result.rows[0];
     } catch (error) {
       console.error('Error en getUser:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  static async getRoles(cedula: string) {
+    const client = await pool.connect();
+    try {
+      const query = `
+        SELECT
+          r.id AS rol_id,
+          r.nombre AS rol_nombre
+        FROM
+          wp_rol_usuario ru
+          JOIN wp_roles r ON ru.rol_id = r.id
+        WHERE
+          ru.usuario_cedula = $1;`;
+
+      const result = await client.query<any>(query, [cedula])
+      return result.rows;
+    } catch (error) {
+      console.error('Error en getRoles:', error);
       throw error;
     } finally {
       client.release();
