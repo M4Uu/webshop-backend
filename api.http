@@ -71,7 +71,8 @@ Content-Type: application/json
   "cedula": 29643469
 }
 
-###
+### Test: Obtener datos de usuarios
+get {{API_URL_DEV}}users/getusers
 
 -------------------------------------------------------------------------------------------------------
 

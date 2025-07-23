@@ -7,6 +7,7 @@ export const createUserRouter = (userModel: typeof UserPostgre) => {
   const userController = new UserController(userModel)
 
   // ENDPOINTS
+  userRouter.get('/getusers', userController.getUsers);
   userRouter.get('/protected', userController.protected);
   userRouter.get('/logout', userController.logOut);
 

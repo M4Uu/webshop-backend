@@ -47,7 +47,7 @@ export class UserController {
 
   login = async (req: Request, res: Response) => {
     const body = schema.validatePartialUser(req.body)
-    const data = await this.userModel.getUser(body.data);
+    const data = await this.userModel.login(body.data);
     if (!data) {
       resService.resNotData(res, 401, 'Correo o contraseña inválidos');
       return;
@@ -129,6 +129,17 @@ export class UserController {
       return;
     }
     const data = await this.userModel.getRoles(result.data.cedula);
+    resService.resWithData(res, 200, 'Consulta exitosa', data);
+    return;
+  }
+
+  getUsers = async (req: Request, res: Response) => {
+    const result = schema.validatePartialUser(req.body)
+    if (result.error) {
+      resService.resError(res, 400, result.error);
+      return;
+    }
+    const data = await this.userModel.getUsers();
     resService.resWithData(res, 200, 'Consulta exitosa', data);
     return;
   }

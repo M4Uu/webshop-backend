@@ -39,7 +39,7 @@ export class UserModel {
   }
 
 
-  static async getUser(input: any) {
+  static async login(input: any) {
     const client = await pool.connect();
     try {
       const query = `
@@ -58,6 +58,41 @@ export class UserModel {
       return null
     } catch (error) {
       console.error('Error en getUser:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  static async getUsers() {
+    const client = await pool.connect();
+    try {
+      const query =
+        `SELECT
+          u.cedula,
+          u.nombres,
+          u.fecha_creacion,
+          u.imagen_url,
+          u.estado,
+          COALESCE(
+            json_agg(
+              json_build_object('nombre', r.nombre)
+            ) FILTER (WHERE r.nombre IS NOT NULL),
+            '[]'::json
+          ) AS roles
+        FROM
+          wp_usuarios u
+        LEFT JOIN wp_rol_usuario ru ON u.cedula = ru.usuario_cedula
+        LEFT JOIN wp_roles r ON ru.rol_id = r.id
+        GROUP BY u.cedula, u.nombres, u.fecha_creacion, u.imagen_url;`;
+
+      const result = await client.query<any>(query)
+      const user = result.rows;
+
+      if (!user) return null;
+      return user;
+    } catch (error) {
+      console.error('Error en getUserByCedula:', error);
       throw error;
     } finally {
       client.release();
