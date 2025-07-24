@@ -43,7 +43,7 @@ export class UserModel {
     const client = await pool.connect();
     try {
       const query = `
-        SELECT cedula, credencial, nombres, nombre_usuario, localidad, correo, imagen_url
+        SELECT cedula, credencial, nombres, nombre_usuario, localidad, correo, imagen_url, estado
         FROM wp_usuarios
         WHERE correo = TRIM($1);
       `;
@@ -174,8 +174,9 @@ export class UserModel {
         SET nombres = $1,
             nombre_usuario = $2,
             localidad = $3,
-            correo = $4
-        WHERE cedula = $5
+            correo = $4,
+            imagen_url = $5
+        WHERE cedula = $6
         RETURNING cedula, nombres, nombre_usuario, localidad, correo;
       `;
 
@@ -184,6 +185,7 @@ export class UserModel {
         input.nombre_usuario,
         input.localidad,
         input.correo,
+        input.imagen_url,
         input.cedula
       ]);
 
@@ -214,32 +216,6 @@ export class UserModel {
         input.telefono,
         input.cedula,
         input.banco_num
-      ]);
-
-      if (updateResult.rows.length === 0) return null;
-      return updateResult.rows[0];
-    } catch (error) {
-      console.error('Error en update:', error);
-      throw new Error('Error updating user');
-    } finally {
-      client.release();
-    }
-  }
-
-  static async updateImage(input: any) {
-    const client = await pool.connect();
-
-    try {
-      const updateQuery = `
-        UPDATE "wp_usuarios"
-        SET imagen_url = $1
-        WHERE cedula = $2
-        RETURNING cedula, imagen_url
-      `;
-
-      const updateResult = await client.query<any>(updateQuery, [
-        input.imagen_url,
-        input.cedula,
       ]);
 
       if (updateResult.rows.length === 0) return null;
@@ -309,4 +285,88 @@ export class UserModel {
       client.release();
     }
   }
+
+  static async toggleAdmin(cedula: string) {
+    const client = await pool.connect();
+    try {
+      const isAdmin = await client.query<any>(
+        'select count(*) as count from wp_rol_usuario where usuario_cedula = $1 and rol_id = 2',
+        [cedula]
+      );
+      const count = parseInt(isAdmin.rows[0].count, 10);
+
+      if (count > 0) {
+        await client.query('DELETE FROM wp_rol_usuario WHERE usuario_cedula = $1 AND rol_id = 2', [cedula]);
+      } else {
+        await client.query('INSERT INTO wp_rol_usuario (usuario_cedula, rol_id) VALUES ($1, 2)', [cedula]);
+      }
+
+      return {
+        message: count > 0 ? 'Rol de administrador eliminado' : 'Rol de administrador agregado',
+        status: count > 0
+      };
+    } catch (error) {
+      console.error('Error en getRoles:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  static async toggleStatus(cedula: string) {
+    const client = await pool.connect();
+    try {
+      const statusUser = await client.query<any>(
+        'select count(*) as count from wp_usuarios where cedula = $1 and estado = true',
+        [cedula]
+      );
+      const count = parseInt(statusUser.rows[0].count, 10);
+
+      if (count > 0) {
+        await client.query('update wp_usuarios set estado = false where cedula = $1', [cedula]);
+      } else {
+        await client.query('update wp_usuarios set estado = true where cedula = $1', [cedula]);
+      }
+
+      return {
+        message: count > 0 ? 'Usuario desactivado' : 'Usuario activado',
+        status: count <= 0
+      };
+    } catch (error) {
+      console.error('Error en getRoles:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  static async isActive(cedula: string) {
+    const client = await pool.connect();
+    try {
+      const statusUser = await client.query<any>(
+        'select count(*) as count from wp_usuarios where cedula = $1 and estado = true',
+        [cedula]
+      );
+      const count = parseInt(statusUser.rows[0].count, 10);
+      if (count > 0) {
+        return {
+          message: 'Usuario activo',
+          status: true
+        }
+      } else {
+        return {
+          message: 'Usuario inactivo',
+          status: false
+        }
+      }
+    } catch (error) {
+      console.error('Error en getRoles:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+
+
 }

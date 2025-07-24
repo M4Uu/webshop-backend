@@ -23,10 +23,52 @@ select
   c.total,
   COALESCE(
     json_agg(
-      json_build_object('producto_id', ci.producto_id)
-    ) FILTER (WHERE ci.producto_id IS NOT NULL),
+      json_build_object(
+        'nombre', p.nombre,
+        'precio', p.precio,
+        'cantidad', ci.cantidad
+        )
+    ),
     '[]'::json
   ) productos
 from wp_compras c
 join wp_compra_items ci on c.id = ci.compra_id
+join wp_productos p on ci.producto_id = p.id
 group by c.id, c.usuario_cedula, c.fecha_compra, c.total;
+
+ALTER TABLE wp_productos
+ALTER COLUMN imagen_url SET DEFAULT 'https://link.storjshare.io/raw/15M6fjomdWMwh4cdbZx5YmDQpQsc8EN73sYKcfLodh6yz6PXEbNJe1WKFvKrwMotebVhRWPiihQoPEuKkaEt1reW5WhPwipmRZnqcfnA5Fq2A5NiMhief8rTrMtFWLimZCkGJp8CqpyA3CkXQZ6tZYrK5sC4Lgksbiq9BMwKnfxXWdH4smKmVNMgYkLyuEiA6gp6eJQv3dqPJnr7SrWepmbKTYQvSQTizqxxTrgj2HDLu6pde6NtYYbAmLArVx5W2fNNVg31w7Kc9nsReNx1HLf5yBhF9v7x9/tesis-webshop-bucket/default-image-product.webp';
+
+INSERT INTO wp_productos (
+    precio,
+    existencias,
+    categoria_id,
+    nombre,
+    descripcion,
+    calificacion
+  )
+VALUES 
+( 100, 10, 1, 'Diamond Ring',
+  'Elegant design with sparkling diamonds. This is a description for Diamond Ring. It is a beautiful piece of jewelry.',
+  5),
+( 200, 5, 2, 'Gold Necklace',
+  'Handcrafted 24K gold necklace. This is a description for Gold Necklace. It is a stunning piece of jewelry.',
+  4),
+( 150, 8, 1, 'Sapphire Earrings',
+  'Exquisite sapphire stud earrings. This is a description for Sapphire Earrings. They are elegant and timeless.',
+  4),
+( 120, 12, 4, 'Pearl Bracelet',
+  'Freshwater pearl bracelet. This is a description for Pearl Bracelet. It is a classic piece of jewelry.',
+  5),
+( 180, 6, 2, 'Ruby Pendant',
+  'Vibrant ruby pendant on gold chain. This is a description for Ruby Pendant. It adds a pop of color to any outfit.',
+  4),
+( 250, 3, 3, 'Emerald Brooch',
+  'Vintage emerald and diamond brooch. This is a description for Emerald Brooch. It is a unique piece of jewelry.',
+  5),
+( 300, 2, 3, 'Platinum Watch',
+  'Luxury platinum automatic watch. This is a description for Platinum Watch. It is a high-end timepiece.',
+  5),
+( 90, 15, 1, 'Topaz Hairpin',
+  'Delicate topaz hair accessory. This is a description for Topaz Hairpin. It is a beautiful hair accessory.',
+  5);

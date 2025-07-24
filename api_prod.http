@@ -1,0 +1,33 @@
+
+#@M4Uu
+### PROD
+@API_URL_PROD = https://webshop-backend-i8ee.onrender.com/api/
+
+
+### test de autenticación de datos
+GET {{API_URL_PROD}}users/protected
+
+###
+POST {{API_URL_PROD}}users/register
+Content-Type: application/json
+
+{
+  "cedula" : 29643469,
+  "nombres" : "Cruz María Lathulerie Gonzáles",
+  "nombre_usuario" : "M4Uu",
+  "credencial" : "1234",
+  "localidad" : "Villa Icabarú, Puerto Ordaz, Estdo Bolívar",
+  "correo" : "cruzmlathulerie@gmail.com",
+  "imagen_url" : "https://images.steamusercontent.com/ugc/2041861391656391717/573638A641371D8C177FD8EA7BBA5390F358258D/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+}
+
+### test de datos por query
+POST {{API_URL_PROD}}users/login
+Content-Type: application/json
+
+{
+  "correo": "cruzmlathulerie@gmail.com",
+  "credencial": "123"
+}
+### Test: Obtener datos de bancos (Nombres y códigos)
+get {{API_URL_PROD}}movil/listbanks

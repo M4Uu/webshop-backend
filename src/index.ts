@@ -3,15 +3,12 @@ import { corsMiddleware } from "./middleware/cors";
 import cookieParser from 'cookie-parser'
 import * as dotenv from 'dotenv';
 
-import { createUserRouter } from "./routes/user"
-import { createToolkitController } from "./routes/toolkit";
-
-import { UserModel } from "./models/postgre/users";
+import { PropsRoutes } from "./servers/serverpostgre";
 
 
 dotenv.config();
 
-export default function App(userModel: typeof UserModel) {
+export default function App(propsModel: any, propsRoutes: PropsRoutes) {
 
   const app = express()
   app.use(express.json())
@@ -41,8 +38,12 @@ export default function App(userModel: typeof UserModel) {
   });
 
   // Rutas reales
-  app.use('/api/users', createUserRouter(userModel));
-  app.use('/api/toolkit', createToolkitController());
+  app.use('/api/users', propsRoutes.userRoute(propsModel.userModel));
+  app.use('/api/ventas', propsRoutes.ventasRoute(propsModel.ventasModel));
+  app.use('/api/productos', propsRoutes.productosRoute(propsModel.productosModel));
+  app.use('/api/categoria', propsRoutes.categoriaRoute(propsModel.categoriaModel));
+
+  app.use('/api/toolkit', propsRoutes.toolkitRoute());
 
 
   app.listen(port, () => {

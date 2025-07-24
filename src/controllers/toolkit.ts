@@ -3,9 +3,26 @@ import { ResponsekitService as resService } from "../middleware/responsekit";
 import storj from '../middleware/storj';
 import sharp from 'sharp';
 import { randomUUID } from 'crypto'
-import { UserModel } from "../models/postgre/users";
 import { getBancos } from "../models/json/bancos";
 
+const uploadImage = async (req: any) => {
+  const optimizationOptions: sharp.WebpOptions = {
+    quality: 85,
+    alphaQuality: 90,
+    lossless: false,
+    nearLossless: true,
+    smartSubsample: true
+  };
+
+  const webpBuffer = await sharp(req.file.buffer)
+    .webp(optimizationOptions)
+    .toBuffer();
+
+  return {
+    imageUrl: await storj.uploadImage(`img-${randomUUID()}.webp`, webpBuffer),
+    webpBuffer: webpBuffer
+  }
+}
 
 export class ToolkitController {
 
@@ -17,8 +34,7 @@ export class ToolkitController {
     }
   }
 
-
-  uploadimg = async (req: Request, res: Response) => {
+  uploadImage = async (req: Request, res: Response) => {
     if (!req.file) {
       resService.resNotData(res, 400, 'No image uploaded');
       return;
@@ -28,36 +44,17 @@ export class ToolkitController {
       return;
     }
 
-    const fileName = `img-${randomUUID()}.webp`;
-
-    const optimizationOptions: sharp.WebpOptions = {
-      quality: 85,
-      alphaQuality: 90,
-      lossless: false,
-      nearLossless: true,
-      smartSubsample: true
-    };
-
-    const webpBuffer = await sharp(req.file.buffer)
-      .webp(optimizationOptions)
-      .toBuffer();
-
     try {
-      const imageUrl = await storj.uploadImage(fileName, webpBuffer);
-      const result = await UserModel.updateImage({ imagen_url: imageUrl, cedula: req.params['cedula'] });
-
-      if (result) {
-        resService.resWithData(res, 200, 'success', {
-          url: imageUrl,
-          size: webpBuffer.byteLength,
-          originalSize: req.file.size
-        })
-      } else {
-        resService.resNotData(res, 401, 'Error update image in DB');
-      }
+      const { imageUrl, webpBuffer } = await uploadImage(req);
+      resService.resWithData(res, 200, 'success', {
+        url: imageUrl,
+        size: webpBuffer.byteLength,
+        originalSize: req.file.size
+      })
       return;
     } catch (reason) {
       console.log('Error in toolkit update image:', reason);
+      resService.resNotData(res, 401, 'Server Error');
       return;
     }
   }

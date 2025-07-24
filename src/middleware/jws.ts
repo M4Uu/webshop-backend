@@ -10,7 +10,8 @@ export function JWTMiddlewareInitial(input: any) {
     imagen_url: input.imagen_url,
     localidad: input.localidad,
     nombre_usuario: input.nombre_usuario,
-    nombres: input.nombres
+    nombres: input.nombres,
+    estado: input.estado
   },
     SECRET_JWT_KEY,
     { expiresIn: '1h' }

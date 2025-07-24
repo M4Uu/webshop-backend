@@ -143,4 +143,37 @@ export class UserController {
     resService.resWithData(res, 200, 'Consulta exitosa', data);
     return;
   }
+
+  toggleAdmin = async (req: Request, res: Response) => {
+    const result = schema.validatePartialUser(req.body)
+    if (result.error) {
+      resService.resError(res, 400, result.error);
+      return;
+    }
+    const data = await this.userModel.toggleAdmin(result.data.cedula);
+    resService.resWithData(res, 200, data.message, data.status);
+    return;
+  }
+
+  toggleStatus = async (req: Request, res: Response) => {
+    const result = schema.validatePartialUser(req.body)
+    if (result.error) {
+      resService.resError(res, 400, result.error);
+      return;
+    }
+    const data = await this.userModel.toggleStatus(result.data.cedula);
+    resService.resWithData(res, 200, data.message, data.status);
+    return;
+  }
+
+  isActive = async (req: Request, res: Response) => {
+    const result = schema.validatePartialUser(req.body)
+    if (result.error) {
+      resService.resError(res, 400, result.error);
+      return;
+    }
+    const data = await this.userModel.isActive(result.data.cedula);
+    resService.resWithData(res, 200, data.message, data.status);
+    return;
+  }
 }

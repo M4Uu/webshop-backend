@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user"
-import { UserModel as UserPostgre } from "../models/postgre/users";
+import { UserModel } from "../models/postgre/users";
 
-export const createUserRouter = (userModel: typeof UserPostgre) => {
+export const createUserRouter = (userModel: typeof UserModel) => {
   const userRouter = Router()
   const userController = new UserController(userModel)
 
@@ -15,6 +15,9 @@ export const createUserRouter = (userModel: typeof UserPostgre) => {
   userRouter.post('/register', userController.register);
   userRouter.post('/getmovil', userController.getMovil);
   userRouter.post('/getroles', userController.getRoles);
+  userRouter.post('/toggleadmin', userController.toggleAdmin);
+  userRouter.post('/togglstatus', userController.toggleStatus);
+  userRouter.post('/isactive', userController.isActive);
 
   userRouter.patch('/update', userController.update);
   userRouter.patch('/updatemovil', userController.updateMovil);

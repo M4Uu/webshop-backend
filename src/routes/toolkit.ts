@@ -10,7 +10,7 @@ export const createToolkitController = () => {
 
   // ENDPOINTS
   toolkitRouter.get('/listbanks', toolkitController.listbanks);
-  toolkitRouter.post('/uploadimg/:cedula', upload.single('image'), toolkitController.uploadimg);
+  toolkitRouter.post('/upload_img', upload.single('image'), toolkitController.uploadImage);
 
   return toolkitRouter;
 }
