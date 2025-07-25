@@ -18,7 +18,7 @@ GROUP BY u.cedula, u.nombres, u.fecha_creacion, u.imagen_url;
 
 select
   c.id,
-  c.usuario_cedula,
+  u.nombres,
   c.fecha_compra,
   c.total,
   COALESCE(
@@ -27,14 +27,17 @@ select
         'nombre', p.nombre,
         'precio', p.precio,
         'cantidad', ci.cantidad
-        )
-    ),
+      )
+      ORDER BY p.nombre
+    ) FILTER (WHERE p.nombre IS NOT NULL),
     '[]'::json
-  ) productos
+  ) as productos
 from wp_compras c
 join wp_compra_items ci on c.id = ci.compra_id
 join wp_productos p on ci.producto_id = p.id
-group by c.id, c.usuario_cedula, c.fecha_compra, c.total;
+join wp_usuarios u on c.usuario_cedula = u.cedula
+group by c.id, u.nombres, c.fecha_compra, c.total
+order by c.fecha_compra desc;
 
 ALTER TABLE wp_productos
 ALTER COLUMN imagen_url SET DEFAULT 'https://link.storjshare.io/raw/15M6fjomdWMwh4cdbZx5YmDQpQsc8EN73sYKcfLodh6yz6PXEbNJe1WKFvKrwMotebVhRWPiihQoPEuKkaEt1reW5WhPwipmRZnqcfnA5Fq2A5NiMhief8rTrMtFWLimZCkGJp8CqpyA3CkXQZ6tZYrK5sC4Lgksbiq9BMwKnfxXWdH4smKmVNMgYkLyuEiA6gp6eJQv3dqPJnr7SrWepmbKTYQvSQTizqxxTrgj2HDLu6pde6NtYYbAmLArVx5W2fNNVg31w7Kc9nsReNx1HLf5yBhF9v7x9/tesis-webshop-bucket/default-image-product.webp';
@@ -72,3 +75,27 @@ VALUES
 ( 90, 15, 1, 'Topaz Hairpin',
   'Delicate topaz hair accessory. This is a description for Topaz Hairpin. It is a beautiful hair accessory.',
   5);
+
+insert into wp_compras (
+  usuario_cedula,
+  fecha_compra,
+  total
+) values
+(29643469, '2023-10-01 10:00:00', 500),
+(29643469, '2023-10-02 11:30:00', 300),
+(29643469, '2023-10-03 14:15:00', 200),
+(29643469, '2023-10-04 16:45:00', 400);
+
+insert into wp_compra_items (
+  compra_id,
+  producto_id,
+  cantidad
+) values
+(1, 1, 2), -- Diamond Ring
+(1, 2, 1), -- Gold Necklace
+(2, 3, 3), -- Sapphire Earrings
+(2, 4, 1), -- Pearl Bracelet
+(3, 5, 2), -- Ruby Pendant
+(3, 6, 1), -- Emerald Brooch
+(4, 7, 1), -- Platinum Watch
+(4, 8, 5); -- Topaz Hairpin

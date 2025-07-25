@@ -35,23 +35,28 @@ export class VentasModel {
       const query = `
         select
           c.id,
-          c.usuario_cedula,
+          u.nombres,
           c.fecha_compra,
           c.total,
+          c.total_bolivares,
           COALESCE(
             json_agg(
               json_build_object(
                 'nombre', p.nombre,
                 'precio', p.precio,
                 'cantidad', ci.cantidad
-                )
-            ),
+              )
+              ORDER BY p.nombre
+            ) FILTER (WHERE p.nombre IS NOT NULL),
             '[]'::json
-          ) productos
+          ) as productos
         from wp_compras c
         join wp_compra_items ci on c.id = ci.compra_id
         join wp_productos p on ci.producto_id = p.id
-        group by c.id, c.usuario_cedula, c.fecha_compra, c.total;`;
+        join wp_usuarios u on c.usuario_cedula = u.cedula
+        group by c.id, u.nombres, c.fecha_compra, c.total
+        order by c.fecha_compra desc;
+        `;
 
       const result = await client.query<any>(query)
       return result.rows;

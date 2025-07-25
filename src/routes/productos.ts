@@ -10,5 +10,8 @@ export const createProductosRouter = (productosModel: typeof ProductosModel) => 
   productosRouter.get('', productosController.index);
   productosRouter.get('/get/:id', productosController.getProductoById);
 
+  productosRouter.post('/create', productosController.create);
+  productosRouter.post('/update', productosController.update);
+
   return productosRouter;
 }

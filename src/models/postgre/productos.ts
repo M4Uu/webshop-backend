@@ -37,7 +37,7 @@ export class ProductosModel {
       const result = await client.query<any>(query)
       return result.rows;
     } catch (error) {
-      console.error('Error en getRoles:', error);
+      console.error('Error en consulta:', error);
       throw error;
     } finally {
       client.release();
@@ -52,7 +52,33 @@ export class ProductosModel {
       const result = await client.query<any>(query, [id])
       return result.rows;
     } catch (error) {
-      console.error('Error en getRoles:', error);
+      console.error('Error en consulta:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  static async create(input: any) {
+    const client = await pool.connect();
+    try {
+      const query = `
+      insert into wp_productos
+        (nombre, descripcion, precio, existencias, calificacion, imagen_url, categoria_id)
+        values ($1, $2, $3, $4, $5, $6, $7);`;
+
+      const result = await client.query<any>(query, [
+        input.nombre,
+        input.descripcion,
+        input.precio,
+        input.existencias,
+        input.calificacion,
+        input.imagen_url,
+        input.categoria_id,
+      ])
+      return result.rows;
+    } catch (error) {
+      console.error('Error al crear producto:', error);
       throw error;
     } finally {
       client.release();
@@ -62,15 +88,31 @@ export class ProductosModel {
   static async update(input: any) {
     const client = await pool.connect();
     try {
-      const query = `update wp_productos set image_url = $1 where id = $2;`;
+      const query = `
+      update wp_productos
+        set
+          nombre = $2,
+          descripcion = $3,
+          precio = $4,
+          existencias = $5,
+          calificacion = $6,
+          imagen_url = $7,
+          categoria_id = $8
+        where id = $1;`;
 
       const result = await client.query<any>(query, [
-        input.image_url,
-        input.id
+        input.id,
+        input.nombre,
+        input.descripcion,
+        input.precio,
+        input.existencias,
+        input.calificacion,
+        input.imagen_url,
+        input.categoria_id,
       ])
       return result.rows;
     } catch (error) {
-      console.error('Error en getRoles:', error);
+      console.error('Error en actualizar:', error);
       throw error;
     } finally {
       client.release();
