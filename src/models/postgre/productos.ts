@@ -44,10 +44,35 @@ export class ProductosModel {
     }
   }
 
+  static async catalogo() {
+    const client = await pool.connect();
+    try {
+      const query = `
+      select p.id, p.nombre, p.precio, p.descripcion, p.imagen_url, c.nombre as categoria
+      from wp_productos p
+      join wp_categorias c on c.id = p.categoria_id;`;
+
+      const result = await client.query<any>(query)
+      return result.rows;
+    } catch (error) {
+      console.error('Error en consulta:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+
+
   static async getProductoById(id: any) {
     const client = await pool.connect();
     try {
-      const query = `select * from wp_productos where id = $1;`;
+      const query = `
+      select p.*, c.nombre as categoria_nombre
+      from wp_productos p
+      join wp_categorias c on c.id = p.categoria_id
+      where p.id = $1;
+      `;
 
       const result = await client.query<any>(query, [id])
       return result.rows;

@@ -105,9 +105,32 @@ Content-Type: application/json
 ### Test: Obtener todas las ventas
 get {{API_URL_DEV}}ventas/
 
+### Test: Obtener ventas por cédula
+post {{API_URL_DEV}}ventas/get
+Content-Type: application/json
+
+{
+  "cedula": 29643469
+}
+
 ###-----------------------------------------PRODUCTOS------------------------------------------------------------###
 ### Test: Obtener todos los productos
 get {{API_URL_DEV}}productos
 
 ### Test: Obtener un producto por ID
 GET {{API_URL_DEV}}productos/get/1
+
+### Test: Obtener productos por categoría
+GET {{API_URL_DEV}}productos/catalogo
+
+###-----------------------------------------CARRITO------------------------------------------------------------###
+
+### Test: Obtener todos los productos del carrito
+post {{API_URL_DEV}}carrito
+Content-Type: application/json
+
+{
+  "cedula": 29643469
+}
+
+###-----------------------------------------GUARDADOS------------------------------------------------------------###

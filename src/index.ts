@@ -42,6 +42,8 @@ export default function App(propsModel: any, propsRoutes: PropsRoutes) {
   app.use('/api/ventas', propsRoutes.ventasRoute(propsModel.ventasModel));
   app.use('/api/productos', propsRoutes.productosRoute(propsModel.productosModel));
   app.use('/api/categoria', propsRoutes.categoriaRoute(propsModel.categoriaModel));
+  app.use('/api/carrito', propsRoutes.carritoRoute(propsModel.carritoModel));
+  app.use('/api/guardados', propsRoutes.guardadosRoute(propsModel.guardadosModel));
 
   app.use('/api/toolkit', propsRoutes.toolkitRoute());
 

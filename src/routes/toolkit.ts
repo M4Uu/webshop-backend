@@ -3,7 +3,7 @@ import { ToolkitController } from "../controllers/toolkit";
 import multer from 'multer';
 
 
-export const createToolkitController = () => {
+export const createToolkitRouter = () => {
   const toolkitRouter = Router()
   const toolkitController = new ToolkitController()
   const upload = multer({ storage: multer.memoryStorage() });

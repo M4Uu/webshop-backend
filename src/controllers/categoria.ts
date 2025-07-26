@@ -10,8 +10,7 @@ export class CategoriaController {
 
   index = async (_req: Request, res: Response) => {
     try {
-      const data = await this.categoriaModel.index();
-      resService.resWithData(res, 200, 'Consulta exitosa', data);
+      resService.resWithData(res, 200, 'Consulta exitosa', await this.categoriaModel.index());
       return;
     } catch (reason) {
       resService.resError(res, 400, reason);

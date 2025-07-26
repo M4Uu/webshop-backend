@@ -29,3 +29,23 @@ ALTER TABLE wp_usuarios ALTER COLUMN localidad TYPE VARCHAR(255);
 
 -- Permitir valores nulos en la columna
 ALTER TABLE wp_usuarios ALTER COLUMN localidad DROP NOT NULL;
+
+alter table wp_carritos
+drop column id,
+drop column fecha_carrito,
+drop column cantidad;
+
+select
+   p.nombre,
+   p.precio,
+   c.cantidad
+from
+   wp_productos p
+   join wp_carritos c on p.id = c.id_producto
+where
+   c.usuario_cedula = 29643469;
+
+select
+   *
+from
+   wp_productos;

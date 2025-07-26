@@ -18,4 +18,15 @@ export class VentasController {
       return;
     }
   }
+
+  getVentasByCedula = async (req: Request, res: Response) => {
+    try {
+      const data = await this.ventasModel.getVentasByCedula(req.body);
+      resService.resWithData(res, 200, 'Consulta exitosa', data);
+      return;
+    } catch (reason) {
+      resService.resError(res, 400, reason);
+      return;
+    }
+  }
 }

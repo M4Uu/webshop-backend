@@ -8,6 +8,7 @@ export const createVentasRouter = (ventasModel: typeof VentasModel) => {
 
   // ENDPOINTS
   ventasRouter.get('', ventasController.index);
+  ventasRouter.post('/get', ventasController.getVentasByCedula);
 
   return ventasRouter;
 }

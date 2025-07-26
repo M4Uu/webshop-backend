@@ -22,6 +22,19 @@ export class ProductosController {
     }
   }
 
+  catalogo = async (_req: Request, res: Response) => {
+    try {
+      resService.resWithData(
+        res, 200, 'Consulta exitosa',
+        await this.productosModel.catalogo()
+      );
+      return;
+    } catch (reason) {
+      resService.resError(res, 400, reason);
+      return;
+    }
+  }
+
   getProductoById = async (req: Request, res: Response) => {
     try {
       resService.resWithData(

@@ -9,6 +9,7 @@ export const createProductosRouter = (productosModel: typeof ProductosModel) => 
   // ENDPOINTS
   productosRouter.get('', productosController.index);
   productosRouter.get('/get/:id', productosController.getProductoById);
+  productosRouter.get('/catalogo', productosController.catalogo);
 
   productosRouter.post('/create', productosController.create);
   productosRouter.post('/update', productosController.update);

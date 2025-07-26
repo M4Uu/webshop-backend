@@ -31,3 +31,11 @@ Content-Type: application/json
 }
 ### Test: Obtener datos de bancos (Nombres y códigos)
 get {{API_URL_PROD}}movil/listbanks
+
+### Test: Verificar si un usuario está activo
+post {{API_URL_PROD}}users/isactive
+Content-Type: application/json
+
+{
+  "cedula": 29643469
+}

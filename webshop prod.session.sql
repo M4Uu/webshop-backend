@@ -99,3 +99,16 @@ insert into wp_compra_items (
 (3, 6, 1), -- Emerald Brooch
 (4, 7, 1), -- Platinum Watch
 (4, 8, 5); -- Topaz Hairpin
+
+
+select * from wp_productos;
+
+select
+  g.fecha_guardado,
+  p.nombre,
+  p.precio,
+  p.descripcion,
+  p.imagen_url
+from wp_guardados g
+join wp_productos p on g.producto_id = p.id
+where usuario_cedula = 29643469;
