@@ -29,4 +29,15 @@ export class VentasController {
       return;
     }
   }
+
+  insertar = async (req: Request, res: Response) => {
+    try {
+      await this.ventasModel.insertar(req.body);
+      resService.resNotData(res, 200, 'Consulta exitosa');
+      return;
+    } catch (reason) {
+      resService.resError(res, 400, reason);
+      return;
+    }
+  }
 }

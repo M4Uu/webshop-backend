@@ -108,7 +108,126 @@ select
   p.nombre,
   p.precio,
   p.descripcion,
-  p.imagen_url
+  p.imagen_url,
+  c.nombre as categoria
 from wp_guardados g
 join wp_productos p on g.producto_id = p.id
+join wp_categorias c on p.categoria_id = c.id
 where usuario_cedula = 29643469;
+
+insert into wp_guardados (
+  usuario_cedula,
+  producto_id,
+  fecha_guardado
+) values
+(29643469, 1, '2023-10-01 10:00:00'), -- Diamond Ring
+(29643469, 2, '2023-10-02 11:30:00'), -- Gold Necklace
+(29643469, 3, '2023-10-03 14:15:00'), -- Sapphire Earrings
+(29643469, 4, '2023-10-04 16:45:00'); -- Pearl Bracelet
+
+SELECT 
+  p.id, 
+  p.nombre, 
+  p.precio, 
+  p.descripcion, 
+  p.imagen_url, 
+  c.nombre AS categoria,
+  EXISTS (
+    SELECT 1 
+    FROM wp_carritos ca 
+    WHERE ca.id_producto = p.id and ca.usuario_cedula = 29
+  ) AS en_carrito
+FROM wp_productos p
+JOIN wp_categorias c ON c.id = p.categoria_id;
+
+SELECT
+        p.id,
+        p.nombre,
+        p.precio,
+        p.descripcion,
+        p.imagen_url,
+        c.nombre AS categoria,
+        EXISTS (
+          SELECT 1
+          FROM wp_carritos ca
+          WHERE ca.id_producto = p.id and ca.usuario_cedula = 29643469
+        ) AS en_carrito,
+        EXISTS (
+          SELECT 1
+          FROM wp_guardados g
+          WHERE g.producto_id = p.id and g.usuario_cedula = 29643469
+        ) AS en_guardados
+      FROM wp_productos p
+      JOIN wp_categorias c ON c.id = p.categoria_id;
+
+delete from wp_carritos where usuario_cedula = 29643469 and id_producto = 1
+
+ALTER TABLE wp_carritos
+ADD COLUMN fecha_actualizacion TIMESTAMP DEFAULT NOW();
+
+delete from wp_compras where usuario_cedula = 29643469
+
+select p.*, c.nombre as categoria_nombre,
+      EXISTS (
+          SELECT 1
+          FROM wp_carritos ca
+          WHERE ca.id_producto = p.id and ca.usuario_cedula = 29643469
+        ) AS en_carrito,
+        EXISTS (
+          SELECT 1
+          FROM wp_guardados g
+          WHERE g.producto_id = p.id and g.usuario_cedula = 29643469
+        ) AS en_guardados
+      from wp_productos p
+      join wp_categorias c on c.id = p.categoria_id
+      where p.id = 1;
+
+CREATE TABLE wp_pedido (
+  id SERIAL PRIMARY KEY,
+  usuario_cedula INTEGER NOT NULL REFERENCES wp_usuarios(cedula),
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT NOT NULL,
+  cantidad INTEGER NOT NULL DEFAULT 0 CHECK (cantidad >= 0),
+  prioridad_id INTEGER NOT NULL REFERENCES wp_prioridad(id),
+  fecha_cita TIMESTAMPTZ NOT NULL,
+  fecha_creacion TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  categoria_id INTEGER NOT NULL REFERENCES wp_categorias(id),
+  
+  CONSTRAINT valid_fecha_cita CHECK (fecha_cita > fecha_creacion)
+);
+
+CREATE INDEX idx_pedido_usuario ON wp_pedido(usuario_cedula);
+CREATE INDEX idx_pedido_fecha_cita ON wp_pedido(fecha_cita);
+
+ALTER TABLE wp_pedido
+ADD CONSTRAINT fk_pedido_usuario
+FOREIGN KEY (usuario_cedula)
+REFERENCES wp_usuarios(cedula)
+ON DELETE CASCADE;
+
+ALTER TABLE wp_pedido
+ADD CONSTRAINT fk_pedido_categoria
+FOREIGN KEY (categoria_id)
+REFERENCES wp_categorias(id)
+ON DELETE SET NULL;
+
+insert into wp_prioridad (nombre) values
+('Sin recoger'),
+('Recogido'),
+('Enviado'),
+('Entregado'),
+('Cancelado'),
+('En espera'),
+('Reembolsado'),
+('En revisión');
+
+INSERT INTO wp_pedido (
+    usuario_cedula,
+    nombre,
+    descripcion,
+    cantidad,
+    prioridad_id,
+    fecha_cita,
+    categoria_id
+  )
+VALUES (29643469, 'titulo test', 'descripcion test', 1, 6, null, 8);

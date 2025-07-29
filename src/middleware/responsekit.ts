@@ -24,7 +24,7 @@ export class ResponsekitService {
     });
 
   static resError = (res: Response, status: number, error: any) =>
-    res.status(status).json({ error: JSON.parse(error?.message as string) });
+    res.status(status).json({ error: error?.message as string || 'Error desconocido' });
 
   static coockieSet = (res: Response, name_cookie: string, jwt: string | null) =>
     res.cookie(name_cookie, jwt,

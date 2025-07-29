@@ -9,6 +9,11 @@ export const createCarritoRouter = (carritoModel: typeof CarritoModel) => {
 
   // ENDPOINTS
   carritoRouter.post('', carritoController.index);
+  carritoRouter.post('/insertar', carritoController.insertar);
+  carritoRouter.post('/eliminar', carritoController.eliminar);
+  carritoRouter.post('/mascantidad', carritoController.aumentarCantidad);
+  carritoRouter.post('/menoscantidad', carritoController.disminuirCantidad);
+  carritoRouter.post('/vendido', carritoController.vendido);
 
   return carritoRouter;
 }

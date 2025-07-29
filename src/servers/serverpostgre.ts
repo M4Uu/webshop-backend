@@ -5,6 +5,7 @@ import { ProductosModel } from "../models/postgre/productos";
 import { CategoriaModel } from "../models/postgre/categoria";
 import { CarritoModel } from "../models/postgre/carrito";
 import { GuardadosModel } from "../models/postgre/guardados";
+import { PedidoModel } from "../models/postgre/pedidos";
 // Modelos
 
 // Rutas
@@ -15,6 +16,7 @@ import { createProductosRouter } from "../routes/productos";
 import { createCategoriaRouter } from "../routes/categoria";
 import { createCarritoRouter } from "../routes/carrito";
 import { createGuardadosRouter } from "../routes/guardados";
+import { createPedidoRouter } from "../routes/pedido";
 // Rutas
 
 // App
@@ -28,7 +30,8 @@ export interface PropsModel {
   productosModel: ProductosModel;
   categoriaModel: CategoriaModel;
   carritoModel: CarritoModel;
-  guardadosModel: GuardadosModel
+  guardadosModel: GuardadosModel;
+  pedidosModel: PedidoModel;
 }
 
 export interface PropsRoutes {
@@ -39,6 +42,7 @@ export interface PropsRoutes {
   categoriaRoute: typeof createCategoriaRouter;
   carritoRoute: typeof createCarritoRouter;
   guardadosRoute: typeof createGuardadosRouter;
+  pedidosRoute: typeof createPedidoRouter;
 }
 // Interfaces
 
@@ -49,7 +53,8 @@ const propsModel: PropsModel = {
   productosModel: ProductosModel,
   categoriaModel: CategoriaModel,
   carritoModel: CarritoModel,
-  guardadosModel: GuardadosModel
+  guardadosModel: GuardadosModel,
+  pedidosModel: PedidoModel,
 };
 
 const propsRoutes: PropsRoutes = {
@@ -60,6 +65,7 @@ const propsRoutes: PropsRoutes = {
   categoriaRoute: createCategoriaRouter,
   carritoRoute: createCarritoRouter,
   guardadosRoute: createGuardadosRouter,
+  pedidosRoute: createPedidoRouter
 };
 // Servidor PostgreSQL
 

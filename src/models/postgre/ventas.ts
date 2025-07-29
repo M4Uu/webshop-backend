@@ -107,4 +107,35 @@ export class VentasModel {
       client.release();
     }
   }
+
+  static async insertar(input: any) {
+    const client = await pool.connect();
+    try {
+      const query = `
+      WITH set_compras AS (
+        INSERT INTO wp_compras (usuario_cedula, total, total_bolivares, dolar)
+        VALUES ($1, $2, $3, $4)
+        RETURNING id
+      )
+      INSERT INTO wp_compra_items (compra_id, producto_id, cantidad)
+      SELECT c.id, unnest($5::integer[]), unnest($6::integer[])
+      FROM set_compras c;
+        `;
+
+      await client.query<any>(query, [
+        input.cedula,
+        input.total,
+        input.total_bolivares,
+        input.dolar,
+        input.productos.map((p: any) => p.id),
+        input.productos.map((p: any) => p.cantidad)
+      ])
+
+    } catch (error) {
+      console.error('Error en getRoles:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 }

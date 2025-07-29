@@ -11,10 +11,7 @@ export class ProductosController {
 
   index = async (_req: Request, res: Response) => {
     try {
-      resService.resWithData(
-        res, 200, 'Consulta exitosa',
-        await this.productosModel.index()
-      );
+      resService.resWithData(res, 200, 'Consulta exitosa', await this.productosModel.index());
       return;
     } catch (reason) {
       resService.resError(res, 400, reason);
@@ -22,11 +19,9 @@ export class ProductosController {
     }
   }
 
-  catalogo = async (_req: Request, res: Response) => {
+  catalogo = async (req: Request, res: Response) => {
     try {
-      resService.resWithData(
-        res, 200, 'Consulta exitosa',
-        await this.productosModel.catalogo()
+      resService.resWithData(res, 200, 'Consulta exitosa', await this.productosModel.catalogo(req.body)
       );
       return;
     } catch (reason) {
@@ -37,10 +32,7 @@ export class ProductosController {
 
   getProductoById = async (req: Request, res: Response) => {
     try {
-      resService.resWithData(
-        res, 200, 'Consulta exitosa',
-        await this.productosModel.getProductoById(req.params['id'])
-      );
+      resService.resWithData(res, 200, 'Consulta exitosa', await this.productosModel.getProductoById(req.body));
       return;
     } catch (reason) {
       resService.resError(res, 400, reason);
@@ -51,10 +43,7 @@ export class ProductosController {
   create = async (req: Request, res: Response) => {
     const body = validatePartialProducto(req.body);
     try {
-      resService.resWithData(
-        res, 200, 'Consulta exitosa',
-        await this.productosModel.create(body.data)
-      );
+      resService.resWithData(res, 200, 'Consulta exitosa', await this.productosModel.create(body.data));
       return;
     } catch (reason) {
       resService.resError(res, 400, reason);
@@ -65,10 +54,19 @@ export class ProductosController {
   update = async (req: Request, res: Response) => {
     const body = validatePartialProducto(req.body);
     try {
-      resService.resWithData(
-        res, 200, 'Consulta exitosa',
-        await this.productosModel.update(body.data)
-      );
+      resService.resWithData(res, 200, 'Consulta exitosa', await this.productosModel.update(body.data));
+      return;
+    } catch (reason) {
+      resService.resError(res, 400, reason);
+      return;
+    }
+  }
+
+  calificacion = async (req: Request, res: Response) => {
+    const body = validatePartialProducto(req.body);
+    try {
+      await this.productosModel.calificacion(body.data)
+      resService.resNotData(res, 200, 'Consulta exitosa');
       return;
     } catch (reason) {
       resService.resError(res, 400, reason);

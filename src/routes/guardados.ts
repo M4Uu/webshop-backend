@@ -9,6 +9,8 @@ export const createGuardadosRouter = (carritoModel: typeof GuardadosModel) => {
 
   // ENDPOINTS
   guardadosRouter.post('', guardadosController.index);
+  guardadosRouter.post('/insertar', guardadosController.insertar);
+  guardadosRouter.post('/eliminar', guardadosController.eliminar);
 
   return guardadosRouter;
 }

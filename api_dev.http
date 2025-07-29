@@ -118,10 +118,23 @@ Content-Type: application/json
 get {{API_URL_DEV}}productos
 
 ### Test: Obtener un producto por ID
-GET {{API_URL_DEV}}productos/get/1
+POST {{API_URL_DEV}}productos/get
+Content-Type: application/json
+
+{
+  "cedula": 29643469,
+  "id_producto": 10
+}
+
 
 ### Test: Obtener productos por categoría
-GET {{API_URL_DEV}}productos/catalogo
+POST {{API_URL_DEV}}productos/catalogo
+Content-Type: application/json
+
+{
+  "cedula": 29643469
+}
+
 
 ###-----------------------------------------CARRITO------------------------------------------------------------###
 
@@ -133,4 +146,46 @@ Content-Type: application/json
   "cedula": 29643469
 }
 
+### Test: Insertar un producto al carrito
+post {{API_URL_DEV}}carrito/insertar
+Content-Type: application/json
+
+{
+  "cedula": 29643469,
+  "id_producto": 1
+}
+
+### Test: Eliminar producto del carrito
+post {{API_URL_DEV}}carrito/eliminar
+Content-Type: application/json
+
+{
+  "cedula": 29643469,
+  "id_producto": 1
+}
+
 ###-----------------------------------------GUARDADOS------------------------------------------------------------###
+post {{API_URL_DEV}}guardados
+Content-Type: application/json
+
+{
+  "cedula": 29643469
+}
+
+### Test: Guardar un Producto
+post {{API_URL_DEV}}guardados/insertar
+Content-Type: application/json
+
+{
+  "cedula": 29643469,
+  "producto_id": 1
+}
+
+### Test: Eliminar un producto de los guardados
+post {{API_URL_DEV}}guardados/eliminar
+Content-Type: application/json
+
+{
+  "cedula": 29643469,
+  "producto_id": 1
+}

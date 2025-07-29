@@ -20,4 +20,22 @@ export class GuardadosController {
     }
   }
 
+  insertar = async (req: Request, res: Response) => {
+    try {
+      await this.guardadosModel.insertar(req.body)
+      resService.resNotData(res, 200, 'Guardado exitosamente');
+    } catch (error: any) {
+      resService.resNotData(res, 500, 'Server error:' + error);
+    }
+  }
+
+  eliminar = async (req: Request, res: Response) => {
+    try {
+      await this.guardadosModel.eliminar(req.body)
+      resService.resNotData(res, 200, 'Eliminado de los guardados de manera exitosa');
+    } catch (error: any) {
+      resService.resNotData(res, 500, 'Server error:' + error);
+    }
+  }
+
 }

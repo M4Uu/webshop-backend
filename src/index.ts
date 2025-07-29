@@ -44,6 +44,7 @@ export default function App(propsModel: any, propsRoutes: PropsRoutes) {
   app.use('/api/categoria', propsRoutes.categoriaRoute(propsModel.categoriaModel));
   app.use('/api/carrito', propsRoutes.carritoRoute(propsModel.carritoModel));
   app.use('/api/guardados', propsRoutes.guardadosRoute(propsModel.guardadosModel));
+  app.use('/api/pedidos', propsRoutes.pedidosRoute(propsModel.pedidosModel));
 
   app.use('/api/toolkit', propsRoutes.toolkitRoute());
 

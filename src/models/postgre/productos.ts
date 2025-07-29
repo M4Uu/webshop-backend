@@ -32,7 +32,14 @@ export class ProductosModel {
   static async index() {
     const client = await pool.connect();
     try {
-      const query = `select id, nombre, precio, existencias, calificacion from wp_productos;`;
+      const query = `select
+        p.id,
+        p.nombre,
+        p.precio,
+        p.existencias,
+        p.calificacion,
+        p.veces_valorado
+      from wp_productos p;`;
 
       const result = await client.query<any>(query)
       return result.rows;
@@ -44,38 +51,68 @@ export class ProductosModel {
     }
   }
 
-  static async catalogo() {
+  static async catalogo(input: any) {
     const client = await pool.connect();
     try {
       const query = `
-      select p.id, p.nombre, p.precio, p.descripcion, p.imagen_url, c.nombre as categoria
-      from wp_productos p
-      join wp_categorias c on c.id = p.categoria_id;`;
-
-      const result = await client.query<any>(query)
-      return result.rows;
-    } catch (error) {
-      console.error('Error en consulta:', error);
-      throw error;
-    } finally {
-      client.release();
-    }
-  }
-
-
-
-  static async getProductoById(id: any) {
-    const client = await pool.connect();
-    try {
-      const query = `
-      select p.*, c.nombre as categoria_nombre
-      from wp_productos p
-      join wp_categorias c on c.id = p.categoria_id
-      where p.id = $1;
+      SELECT
+        p.id,
+        p.nombre,
+        p.precio,
+        p.descripcion,
+        p.calificacion,
+        p.veces_valorado,
+        p.imagen_url,
+        c.nombre AS categoria,
+        EXISTS (
+          SELECT 1
+          FROM wp_carritos ca
+          WHERE ca.id_producto = p.id and ca.usuario_cedula = $1
+        ) AS en_carrito,
+        EXISTS (
+          SELECT 1
+          FROM wp_guardados g
+          WHERE g.producto_id = p.id and g.usuario_cedula = $1
+        ) AS en_guardados
+      FROM wp_productos p
+      JOIN wp_categorias c ON c.id = p.categoria_id
+      WHERE p.existencias > 0;
       `;
 
-      const result = await client.query<any>(query, [id])
+      const result = await client.query<any>(query, [input.cedula])
       return result.rows;
+    } catch (error) {
+      console.error('Error en consulta:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+
+
+  static async getProductoById(input: any) {
+    const client = await pool.connect();
+    try {
+      const query = `
+      select p.*, c.nombre as categoria_nombre,
+      EXISTS (
+          SELECT 1
+          FROM wp_carritos ca
+          WHERE ca.id_producto = p.id and ca.usuario_cedula = $1
+        ) AS en_carrito,
+        EXISTS (
+          SELECT 1
+          FROM wp_guardados g
+          WHERE g.producto_id = p.id and g.usuario_cedula = $1
+        ) AS en_guardados
+      from wp_productos p
+      join wp_categorias c on c.id = p.categoria_id
+      where p.id = $2;
+      `;
+
+      const result = await client.query<any>(query, [input.cedula, input.producto_id])
+      return result.rows[0];
     } catch (error) {
       console.error('Error en consulta:', error);
       throw error;
@@ -120,7 +157,6 @@ export class ProductosModel {
           descripcion = $3,
           precio = $4,
           existencias = $5,
-          calificacion = $6,
           imagen_url = $7,
           categoria_id = $8
         where id = $1;`;
@@ -131,7 +167,6 @@ export class ProductosModel {
         input.descripcion,
         input.precio,
         input.existencias,
-        input.calificacion,
         input.imagen_url,
         input.categoria_id,
       ])
@@ -143,4 +178,25 @@ export class ProductosModel {
       client.release();
     }
   }
+
+  static async calificacion(input: any) {
+    const client = await pool.connect();
+    try {
+      const query = `
+      update wp_productos
+        set
+          calificacion = calificacion +$2,
+          veces_valorado = veces_valorado +1
+        where id = $1;`;
+
+      await client.query<any>(query, [input.calificacion])
+    } catch (error) {
+      console.error('Error en actualizar:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  // TODO: Crear Endpoint "inhabilitar", el cual consistirá en colocar el stock/existencias del producto en 0
 }
