@@ -231,3 +231,18 @@ INSERT INTO wp_pedido (
     categoria_id
   )
 VALUES (29643469, 'titulo test', 'descripcion test', 1, 6, null, 8);
+
+
+select
+  p.usuario_cedula,
+  p.nombre,
+  p.descripcion,
+  p.cantidad,
+  pr.nombre,
+  ca.nombre,
+  p.fecha_cita,
+  p.fecha_creacion
+from wp_pedido p
+join wp_categorias ca on p.categoria_id = ca.id
+join wp_prioridad pr on p.prioridad_id = pr.id
+where p.usuario_cedula = 29643469;

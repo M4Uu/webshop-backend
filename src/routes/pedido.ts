@@ -8,6 +8,7 @@ export const createPedidoRouter = (pedidoModel: typeof PedidoModel) => {
 
   // ENDPOINTS
   pedidoRouter.get('', pedidoController.index);
+  pedidoRouter.post('/get', pedidoController.getByCedula);
 
   return pedidoRouter;
 }

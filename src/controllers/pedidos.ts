@@ -17,4 +17,14 @@ export class PedidoController {
       return;
     }
   }
+
+  getByCedula = async (req: Request, res: Response) => {
+    try {
+      resService.resWithData(res, 200, 'Consulta exitosa', await this.pedidoModel.getByCedula(req.body));
+      return;
+    } catch (reason) {
+      resService.resError(res, 400, reason);
+      return;
+    }
+  }
 }

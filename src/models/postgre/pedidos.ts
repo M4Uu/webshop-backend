@@ -28,14 +28,11 @@ export class PedidoModel {
     })
   }
 
-
   static async index() {
     const client = await pool.connect();
     try {
-      const query = `SELECT
-        id as code,
-        nombre as name
-      FROM wp_categorias;`;
+      const query = `
+      SELECT;`;
 
       const result = await client.query<any>(query)
       return result.rows;
@@ -46,4 +43,34 @@ export class PedidoModel {
       client.release();
     }
   }
+
+  static async getByCedula(input: any) {
+    const client = await pool.connect();
+    try {
+      const query = `
+      select
+        p.usuario_cedula,
+        p.nombre,
+        p.descripcion,
+        p.cantidad,
+        pr.nombre,
+        ca.nombre,
+        p.fecha_cita,
+        p.fecha_creacion
+      from wp_pedido p
+      join wp_categorias ca on p.categoria_id = ca.id
+      join wp_prioridad pr on p.prioridad_id = pr.id
+      where p.usuario_cedula = $1;
+      `;
+
+      const result = await client.query<any>(query, [input.cedula])
+      return result.rows;
+    } catch (error) {
+      console.error('Error en getRoles:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
 }
