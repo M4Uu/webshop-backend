@@ -158,7 +158,11 @@ export class VentasModel {
         fecha_creacion >= CURRENT_DATE - INTERVAL '7 days'
         AND fecha_creacion < CURRENT_DATE + INTERVAL '1 day';
         `);
-
+      const result = {
+        ventasMes: ventasMes,
+        pedidosSemana: pedidosSemana
+      }
+      return result;
     } catch (error) {
       console.error('Error en getRoles:', error);
       throw error;
