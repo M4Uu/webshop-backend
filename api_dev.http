@@ -189,3 +189,26 @@ Content-Type: application/json
   "cedula": 29643469,
   "producto_id": 1
 }
+
+###-----------------------------------------PEDIDOS------------------------------------------------------------###
+### Test: Todos los pedidos
+get {{API_URL_DEV}}pedidos
+
+### Test: Obtener lista de estados
+get {{API_URL_DEV}}pedidos/prioridad
+
+### Test:Pedidos por cedula
+post {{API_URL_DEV}}pedidos/get
+Content-Type: application/json
+
+{
+  "cedula": 29643469
+}
+
+### Test:Pedidos por id
+post {{API_URL_DEV}}pedidos/id
+Content-Type: application/json
+
+{
+  "pedido_id": 1
+}

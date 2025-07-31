@@ -246,3 +246,21 @@ from wp_pedido p
 join wp_categorias ca on p.categoria_id = ca.id
 join wp_prioridad pr on p.prioridad_id = pr.id
 where p.usuario_cedula = 29643469;
+
+INSERT INTO wp_compras (
+    id,
+    usuario_cedula,
+    fecha_compra,
+    total,
+    total_bolivares,
+    dolar
+  )
+VALUES (
+    id:integer,
+    usuario_cedula:integer,
+    'fecha_compra:timestamp without time zone',
+    total:numeric,
+    total_bolivares:numeric,
+    dolar:numeric
+  );
+

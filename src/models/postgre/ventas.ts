@@ -138,4 +138,32 @@ export class VentasModel {
       client.release();
     }
   }
+
+  static async analiticas() {
+    const client = await pool.connect();
+    try {
+
+      const ventasMes = await client.query<any>(`
+      SELECT COUNT(*) AS ventas_este_mes
+      FROM wp_compras
+      WHERE
+        fecha_compra >= DATE_TRUNC('month', CURRENT_DATE)
+        AND fecha_compra < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month';
+        `);
+
+      const pedidosSemana = await client.query<any>(`
+      SELECT COUNT(*) AS pedidos_ultima_semana
+      FROM wp_pedido
+      WHERE
+        fecha_creacion >= CURRENT_DATE - INTERVAL '7 days'
+        AND fecha_creacion < CURRENT_DATE + INTERVAL '1 day';
+        `);
+
+    } catch (error) {
+      console.error('Error en getRoles:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 }
