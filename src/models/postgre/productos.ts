@@ -1,9 +1,5 @@
 import { Pool } from 'pg';
-
-export const dbConfig = {
-  connectionString: process.env['DB_STRING'],
-  ssl: { rejectUnauthorized: false }
-};
+import { dbConfig } from '../../interface/db';
 
 const pool = new Pool(dbConfig);
 
@@ -199,4 +195,5 @@ export class ProductosModel {
   }
 
   // TODO: Crear Endpoint "inhabilitar", el cual consistirá en colocar el stock/existencias del producto en 0
+  // TODO: Interrogantes en la lamina de la tesis. Falta elaborar esta lámina.
 }

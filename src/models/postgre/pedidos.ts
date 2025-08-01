@@ -1,9 +1,5 @@
 import { Pool } from 'pg';
-
-export const dbConfig = {
-  connectionString: process.env['DB_STRING'],
-  ssl: { rejectUnauthorized: false }
-};
+import { dbConfig } from '../../interface/db';
 
 const pool = new Pool(dbConfig);
 

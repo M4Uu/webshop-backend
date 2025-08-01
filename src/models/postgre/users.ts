@@ -1,10 +1,6 @@
 import { Pool } from 'pg';
+import { dbConfig } from '../../interface/db';
 import bcrypt from 'bcryptjs';
-
-export const dbConfig = {
-  connectionString: process.env['DB_STRING'],
-  ssl: { rejectUnauthorized: false }
-};
 
 const pool = new Pool(dbConfig);
 

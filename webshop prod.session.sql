@@ -264,3 +264,4 @@ VALUES (
     dolar:numeric
   );
 
+ALTER TABLE wp_usuarios DROP CONSTRAINT telefono_unico;
