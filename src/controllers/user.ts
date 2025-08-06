@@ -176,4 +176,23 @@ export class UserController {
     resService.resWithData(res, 200, data.message, data.status);
     return;
   }
+
+  sendReporte = async (req: Request, res: Response) => {
+    try {
+      await this.userModel.sendReporte(req.body);
+      resService.resNotData(res, 200, 'Reporte recibido exitosamente');
+      return;
+    } catch (reason) {
+      resService.resError(res, 400, reason);
+    }
+  }
+
+  viewReportes = async (_req: Request, res: Response) => {
+    try {
+      resService.resWithData(res, 200, 'Consulta realizada exitosamente', await this.userModel.viewReportes());
+      return;
+    } catch (reason) {
+      resService.resError(res, 400, reason);
+    }
+  }
 }

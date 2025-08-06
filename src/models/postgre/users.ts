@@ -364,5 +364,42 @@ export class UserModel {
   }
 
 
+  static async sendReporte(input: any) {
+    const client = await pool.connect();
+    try {
+      const query = `
+      insert into wp_reportes(nombres, correo, mensaje)
+      values ($1, $2, $3);`;
+
+      await client.query<any>(query, [
+        input.nombres,
+        input.correo,
+        input.mensaje
+      ])
+      return true;
+    } catch (error) {
+      console.error('Error en getRoles:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  static async viewReportes() {
+    const client = await pool.connect();
+    try {
+      const query = `
+      select * from wp_reportes
+      order by fecha_creacion DESC;`;
+
+      const result = await client.query<any>(query);
+      return result.rows;
+    } catch (error) {
+      console.error('Error en getRoles:', error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
 }

@@ -52,9 +52,8 @@ export class ProductosController {
   }
 
   update = async (req: Request, res: Response) => {
-    const body = validatePartialProducto(req.body);
     try {
-      resService.resWithData(res, 200, 'Consulta exitosa', await this.productosModel.update(body.data));
+      resService.resWithData(res, 200, 'Consulta exitosa', await this.productosModel.update(req.body));
       return;
     } catch (reason) {
       resService.resError(res, 400, reason);

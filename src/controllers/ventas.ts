@@ -40,4 +40,15 @@ export class VentasController {
       return;
     }
   }
+
+  analiticas = async (_req: Request, res: Response) => {
+    try {
+      const data = await this.ventasModel.analiticas();
+      resService.resWithData(res, 200, 'Consulta exitosa', data);
+      return;
+    } catch (reason) {
+      resService.resError(res, 400, reason);
+      return;
+    }
+  }
 }

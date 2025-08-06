@@ -100,6 +100,18 @@ Content-Type: application/json
   "cedula": 29643469
 }
 
+### Test: Enviar un reporte
+post {{API_URL_DEV}}users/sendreporte
+Content-Type: application/json
+
+{
+  "nombres": "Test nombre",
+  "correo": "testcorreo@gmail.com",
+  "mensaje": "Aquí un mensaje de prueba"
+}
+### Test: Ver reportes
+get {{API_URL_DEV}}users/viewreportes
+
 
 ###-----------------------------------------VENTAS------------------------------------------------------------###
 ### Test: Obtener todas las ventas
@@ -112,6 +124,9 @@ Content-Type: application/json
 {
   "cedula": 29643469
 }
+
+### Test: Obtener analiticas
+get {{API_URL_DEV}}ventas/analiticas
 
 ###-----------------------------------------PRODUCTOS------------------------------------------------------------###
 ### Test: Obtener todos los productos

@@ -265,3 +265,60 @@ VALUES (
   );
 
 ALTER TABLE wp_usuarios DROP CONSTRAINT telefono_unico;
+
+
+
+
+SELECT
+    -- Ventas por mes en todo el año actual (array de meses y array de conteos)
+    (
+        SELECT array_agg(TO_CHAR(mes, 'YYYY-MM')) 
+        FROM generate_series(
+            DATE_TRUNC('year', CURRENT_DATE),
+            DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year' - INTERVAL '1 month',
+            INTERVAL '1 month'
+        ) AS mes
+    ) AS meses_del_anio,
+    
+    (
+        SELECT array_agg(COALESCE(ventas_count, 0))
+        FROM generate_series(
+            DATE_TRUNC('year', CURRENT_DATE),
+            DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year' - INTERVAL '1 month',
+            INTERVAL '1 month'
+        ) AS mes
+        LEFT JOIN (
+            SELECT 
+                DATE_TRUNC('month', fecha_compra) AS mes_venta,
+                COUNT(*) AS ventas_count
+            FROM wp_compras
+            WHERE fecha_compra >= DATE_TRUNC('year', CURRENT_DATE)
+            GROUP BY mes_venta
+        ) v ON mes = v.mes_venta
+    ) AS ventas_por_mes,
+    
+    -- Pedidos por mes en todo el año actual
+    (
+        SELECT array_agg(COALESCE(pedidos_count, 0))
+        FROM generate_series(
+            DATE_TRUNC('year', CURRENT_DATE),
+            DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year' - INTERVAL '1 month',
+            INTERVAL '1 month'
+        ) AS mes
+        LEFT JOIN (
+            SELECT 
+                DATE_TRUNC('month', fecha_creacion) AS mes_pedido,
+                COUNT(*) AS pedidos_count
+            FROM wp_pedido
+            WHERE fecha_creacion >= DATE_TRUNC('year', CURRENT_DATE)
+            GROUP BY mes_pedido
+        ) p ON mes = p.mes_pedido
+    ) AS pedidos_por_mes,
+    
+    -- Pedidos de esta semana
+    (
+        SELECT COUNT(*) 
+        FROM wp_pedido
+        WHERE fecha_creacion >= CURRENT_DATE - INTERVAL '7 days'
+        AND fecha_creacion < CURRENT_DATE + INTERVAL '1 day'
+    ) AS pedidos_ultima_semana;

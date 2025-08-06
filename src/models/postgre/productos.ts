@@ -153,8 +153,8 @@ export class ProductosModel {
           descripcion = $3,
           precio = $4,
           existencias = $5,
-          imagen_url = $7,
-          categoria_id = $8
+          imagen_url = $6,
+          categoria_id = $7
         where id = $1;`;
 
       const result = await client.query<any>(query, [
@@ -185,7 +185,10 @@ export class ProductosModel {
           veces_valorado = veces_valorado +1
         where id = $1;`;
 
-      await client.query<any>(query, [input.calificacion])
+      await client.query<any>(query, [
+        input.id,
+        input.calificacion
+      ])
     } catch (error) {
       console.error('Error en actualizar:', error);
       throw error;
@@ -194,6 +197,5 @@ export class ProductosModel {
     }
   }
 
-  // TODO: Crear Endpoint "inhabilitar", el cual consistirá en colocar el stock/existencias del producto en 0
   // TODO: Interrogantes en la lamina de la tesis. Falta elaborar esta lámina.
 }
